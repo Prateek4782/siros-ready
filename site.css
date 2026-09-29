@@ -5,25 +5,33 @@
    ========================================================================== */
 
 :root {
-  /* Ola Electric's real palette, sampled from olaelectric.com's own computed
-     styles: a warm off-white ground, near-black sections, and a single
-     saturated green accent — not an invented interpretation of "Ola-style". */
-  --sc-canvas:     #FFFCF8;
+  /* Ola Electric's REAL palette — re-sampled directly from olaelectric.com's
+     own computed styles (getComputedStyle on its actual buttons, footer,
+     badges and body text), not assumed from an earlier pass. The corrected
+     finding: Ola's primary buttons, nav and links are near-black-on-white
+     (or white-on-near-black) — a monochrome brand. The saturated green only
+     ever showed up once, as a tiny "Gen3 / New" tag label. Making green the
+     site's whole accent (buttons, links, icons) was the earlier mistake;
+     --sc-accent is now the same dark ink Ola actually uses for its CTAs,
+     and --sc-badge holds the real, rare green for small tag text only. */
+  --sc-canvas:     #FFFCF8;   /* Ola's own warm off-white section bg */
   --sc-surface:    #FFFFFF;
-  --sc-ink:        #14181B;
-  --sc-ink-soft:   #687986;
-  --sc-accent:     #16AA51;
+  --sc-ink:        #181E22;   /* Ola's real button/heading near-black */
+  --sc-ink-soft:   #687986;   /* Ola's real muted body-copy grey */
+  --sc-accent:     var(--sc-ink);   /* Ola's primary CTA IS the ink colour */
   --sc-accent-ink: #FFFFFF;
 
-  --forest:        #181E22;
-  --forest-soft:   #252C31;
+  --forest:        #0A1320;   /* Ola's real footer/dark-section navy-black */
+  --forest-soft:   #151F30;
   --cream:         #FFFCF8;
   --line:          color-mix(in oklab, var(--sc-ink) 14%, transparent);
-  /* Ola's own button green on white sits near 3:1 — fine for a large,
-     bold pill button, but too weak for small label text. Darken it for
-     any small/label TEXT on cream or white; keep --sc-accent at its real
-     brightness for buttons, large numerals and icon fills. */
-  --accent-text:   #0E7A3B;
+  /* Small CTA/link text ("Explore →" etc.) reads as ink too, same as the
+     buttons — Ola doesn't colour its text links green. */
+  --accent-text:   var(--sc-ink);
+  /* The one place real green survives: a small badge/tag label, exactly
+     the role it plays on Ola's own product cards ("Gen3", "New"). Not used
+     for buttons, links or icon fills anywhere. */
+  --sc-badge:      #16AA51;
 
   --sc-font-display: "Archivo", "Noto Sans Devanagari", system-ui, sans-serif;
   --sc-font-text:    "Manrope", "Noto Sans Devanagari", system-ui, sans-serif;
@@ -80,6 +88,16 @@ em, i.brandmark-italic { font-style: italic; }
 .btn:active { transform: translateY(0) scale(0.98); }
 .btn--accent { background: var(--sc-accent); color: var(--sc-accent-ink); border-color: var(--sc-accent); box-shadow: var(--sc-e1); }
 .btn--accent:hover { background: color-mix(in oklab, var(--sc-accent) 88%, black 6%); border-color: color-mix(in oklab, var(--sc-accent) 88%, black 6%); }
+/* --sc-accent is dark ink now, so on the site's own dark bands (the close
+   act, the closing CTA on every sub-page) it would blend straight into the
+   background. Invert to light-on-dark there, same principle as the product
+   card and modal buttons. */
+.close-stage .btn--accent, .dealers-closing .btn--accent {
+  background: var(--cream); color: var(--sc-ink); border-color: var(--cream);
+}
+.close-stage .btn--accent:hover, .dealers-closing .btn--accent:hover {
+  background: #FFFFFF; border-color: #FFFFFF;
+}
 @media (max-width: 900px) { .btn { min-height: 46px; padding: 0 1.25rem; gap: 0.6rem; } }
 .nav__menu-btn { display: none; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: var(--sc-surface); align-items: center; justify-content: center; cursor: pointer; }
 .nav__menu-btn span, .nav__menu-btn::before, .nav__menu-btn::after { content: ''; display: block; width: 16px; height: 1.6px; background: var(--sc-ink); position: absolute; transition: transform 260ms var(--sc-ease-drawer), opacity 200ms; }
@@ -109,24 +127,40 @@ em, i.brandmark-italic { font-style: italic; }
 }
 
 /* ------------------------------------------------------------- hero act -- */
-.hero-stage { background: var(--sc-canvas); }
-.hero-copy h1 { font-size: var(--sc-t-4xl); }
-.hero-copy .sc-body { font-size: var(--sc-t-lg); max-width: 34ch; color: color-mix(in oklab, var(--sc-ink) 74%, transparent); }
-.hero-eyebrow { display: block; margin-bottom: var(--sc-4); }
-.hero-cta-row { display: flex; align-items: center; gap: 1.4rem; margin-top: var(--sc-6); flex-wrap: wrap; }
-.hero-cta-row .btn { padding: 0.95rem 1.6rem; font-size: var(--sc-t-base); }
-.hero-signature {
-  position: absolute; z-index: var(--sc-z-copy); right: var(--sc-gutter); bottom: clamp(1.6rem, 4vh, 3rem);
-  text-align: right; font-family: var(--sc-font-display); font-weight: 800;
-  font-size: clamp(1rem, 1.7vw, 1.4rem); color: var(--sc-ink);
-  background: color-mix(in oklab, var(--cream) 88%, transparent);
-  backdrop-filter: blur(8px);
-  border-radius: var(--sc-r-md);
-  padding: 0.7rem 1.1rem;
-  box-shadow: var(--sc-e1);
+/* No scroll-scrub, no pin: this is a plain flow section, so it plays like
+   any ordinary autoplaying background video and never hijacks the wheel. A
+   dark scrim sits over the whole frame (not just behind the text) so the
+   heading stays legible no matter which frame of the loop is showing. */
+.hero-simple { position: relative; height: 100svh; min-height: 30rem; overflow: hidden; background: var(--sc-ink); }
+.hero-simple__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero-simple::after {
+  content: ''; position: absolute; inset: 0;
+  /* Content sits vertically centred, so the scrim needs to be at its
+     darkest right there too — a lighter middle band under centred text
+     defeats the point of having one. */
+  background: linear-gradient(180deg, rgba(10,13,15,.58) 0%, rgba(10,13,15,.56) 50%, rgba(10,13,15,.64) 100%);
 }
-.hero-signature small { display: block; margin-top: 0.25rem; font-family: var(--sc-font-text); font-weight: 600; font-size: var(--sc-t-xs); letter-spacing: var(--sc-track-wide); text-transform: uppercase; color: var(--sc-ink-soft); }
-@media (max-width: 640px) { .hero-signature { display: none; } }
+.hero-simple__content {
+  position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 1.2rem; text-align: center;
+  padding-inline: var(--sc-gutter);
+}
+.hero-simple__brand { display: flex; align-items: center; gap: 0.6rem; }
+.hero-simple__mark { width: clamp(1.8rem, 3vw, 2.4rem); height: auto; filter: drop-shadow(0 4px 10px rgba(0,0,0,.4)); }
+.hero-simple__word {
+  font-family: var(--sc-font-display); font-weight: 800; color: var(--cream);
+  font-size: clamp(1.05rem, 2vw, 1.3rem); letter-spacing: var(--sc-track-wide);
+}
+.hero-simple__heading {
+  margin: 0; max-width: 20ch; font-family: var(--sc-font-display); font-weight: 800;
+  color: var(--cream); font-size: clamp(2.4rem, 6.5vw, 4.6rem); line-height: 1.08;
+  letter-spacing: var(--sc-track-snug); text-shadow: 0 4px 24px rgba(0,0,0,.45);
+}
+.hero-simple__heading em { color: var(--sc-badge); font-style: italic; }
+.hero-simple__sub {
+  margin: 0; max-width: 40ch; color: color-mix(in oklab, var(--cream) 84%, transparent);
+  font-size: clamp(1rem, 1.6vw, 1.2rem); line-height: 1.6; text-shadow: 0 2px 14px rgba(0,0,0,.4);
+}
 
 /* ------------------------------------------------------------ meet siros -- */
 .meet-siros__grid {
@@ -189,7 +223,7 @@ em, i.brandmark-italic { font-style: italic; }
   color: var(--cream); max-width: 26ch;
 }
 @media (max-width: 640px) { .trust-argument { min-height: 17rem; } }
-.trust-argument p b { color: var(--sc-accent); font-weight: 700; }
+.trust-argument p b { color: var(--cream); font-weight: 700; }
 .trust-argument p small { display: block; margin-top: 0.8rem; font-family: var(--sc-font-text); font-weight: 500; font-size: var(--sc-t-base); line-height: 1.6; color: color-mix(in oklab, var(--cream) 86%, transparent); max-width: 40ch; }
 
 /* --------------------------------------------------------------- cost act -- */
@@ -217,6 +251,12 @@ em, i.brandmark-italic { font-style: italic; }
 /* ------------------------------------------------------------- range act -- */
 .dealers-section { padding-top: clamp(1.5rem, 3vw, 2.5rem); }
 .emi-stage { padding-top: clamp(2rem, 4vw, 3rem); }
+/* Same fix as the two above, just never applied here: the flow section
+   right after the pinned card rail was still getting the full ~11rem
+   --sc-section top padding, on top of a pinned stage that already spends a
+   whole viewport sliding away — the two together read as a broken gap
+   between the last card and "Standard on every model", not a pause. */
+#range + .sc-section { padding-top: clamp(1.5rem, 3vw, 2.5rem); }
 
 /* A pinned pan act: the page holds still and the reader's own scroll drags
    the shelf sideways, card by card, instead of asking for a swipe/drag on
@@ -262,7 +302,7 @@ em, i.brandmark-italic { font-style: italic; }
 .range-grid__item .meta__brand span { font-family: var(--sc-font-text); font-size: 0.65rem; font-weight: 800; letter-spacing: var(--sc-track-wide); text-transform: uppercase; color: color-mix(in oklab, var(--cream) 60%, transparent); }
 .range-grid__item .meta__name { margin-top: 0.35rem; display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
 .range-grid__item .meta__name h4 { margin: 0; font-family: var(--sc-font-display); font-size: 1.3rem; font-weight: 800; color: var(--cream); letter-spacing: var(--sc-track-snug); }
-.range-grid__item .tag { font-family: var(--sc-font-text); font-style: italic; font-size: 0.72rem; font-weight: 700; color: var(--sc-accent); }
+.range-grid__item .tag { font-family: var(--sc-font-text); font-style: italic; font-size: 0.72rem; font-weight: 700; color: var(--sc-badge); }
 .range-grid__item .meta__blurb {
   margin: 0.5rem 0 0; font-size: var(--sc-t-xs); line-height: 1.5;
   color: color-mix(in oklab, var(--cream) 62%, transparent);
@@ -280,15 +320,18 @@ em, i.brandmark-italic { font-style: italic; }
   padding: 0.65rem 1rem; border-radius: var(--sc-r-pill); font-size: var(--sc-t-sm); font-weight: 700;
   transition: background 180ms, color 180ms, border-color 180ms;
 }
-.card-btn--primary { background: var(--sc-accent); color: var(--sc-accent-ink); }
-.card-btn--primary:hover { background: color-mix(in oklab, var(--sc-accent) 85%, white); }
+/* Always sits on the dark card body, so the primary button inverts to
+   light-on-dark rather than using --sc-accent (which is dark ink now and
+   would disappear against the card's own dark background). */
+.card-btn--primary { background: var(--cream); color: var(--sc-ink); }
+.card-btn--primary:hover { background: #FFFFFF; }
 .card-btn--ghost { background: transparent; color: var(--cream); border: 1px solid color-mix(in oklab, var(--cream) 30%, transparent); }
 .card-btn--ghost:hover { border-color: var(--cream); }
 
 /* the "view all" tile: same footprint as a product card, accent-bright
    instead of photographic, so it reads as a doorway out of the grid rather
    than a twelfth product. */
-.range-grid__item--viewall { background: var(--sc-accent); }
+.range-grid__item--viewall { background: var(--cream); }
 .range-grid__item--viewall__inner { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 1.6rem 1.4rem; }
 .range-grid__item--viewall__count { font-family: var(--sc-font-display); font-size: 2.4rem; font-weight: 800; color: var(--sc-ink); line-height: 1; }
 .range-grid__item--viewall h4 { margin: 0.6rem 0 0; padding: 0; color: var(--sc-ink); font-size: 1.05rem; }
@@ -302,6 +345,35 @@ em, i.brandmark-italic { font-style: italic; }
 .rail-progress { height: 2px; width: 100%; margin: 1.4rem auto 0; max-width: 12rem; border-radius: 2px; background: var(--line); overflow: hidden; }
 .rail-progress span { display: block; height: 100%; width: 30%; border-radius: 2px; background: var(--sc-ink); transform: translateX(calc(var(--sc-p, 0) * 233.33%)); }
 @media (max-width: 640px) { .range-grid__item { flex: 0 0 72vw; max-width: 17rem; } }
+
+/* A pinned stage is always exactly one viewport tall. The head copy plus a
+   full card comfortably clears 850px+ of vertical room but not the 650-800px
+   a laptop browser actually gives you after its own chrome — past that
+   point the card's price row and buttons were getting sliced off by the
+   stage's own overflow:clip. Shrink both proactively rather than wait for a
+   specific breakpoint to prove it: this also covers phones in landscape,
+   which the max-width-only mobile rules below don't. */
+/* Raised from 900 to 1100: the earlier threshold still left real laptop
+   viewports (module the browser's own chrome eats 150-250px of a
+   1080p-class screen) just past the cutoff, so the card's bottom padding
+   and corner radius were still getting sliced by the stage's own
+   overflow:clip — reported twice as "cards have no bottom padding or
+   curve." Widening the net costs nothing: the shrunk layout looks the same
+   as the full one, just tighter. */
+@media (max-height: 1100px) {
+  .range-stage { gap: clamp(0.9rem, 2vw, 1.4rem); padding-block: 0.5rem; }
+  .range-stage__head .sc-body { display: none; }
+  .range-grid__item .thumb { aspect-ratio: 1/0.55; padding-top: 1rem; }
+  .range-grid__item .meta__blurb { -webkit-line-clamp: 1; }
+  .range-grid__item .meta__price { margin-top: 0.55rem; padding-top: 0.6rem; }
+  .range-grid__item .meta__actions { padding-top: 0.65rem; gap: 0.4rem; }
+  .range-grid__item .card-btn { padding: 0.5rem 1rem; min-height: 0; }
+  .range-grid__item .meta { padding-bottom: 1.4rem; }
+}
+@media (max-height: 860px) {
+  .range-stage__head h2 { font-size: clamp(1.5rem, 3.4vw, 2rem); }
+  .range-stage__head { padding-top: 0; }
+}
 
 /* features strip */
 .features-strip { display: flex; flex-wrap: wrap; gap: 0.6rem; }
@@ -327,17 +399,17 @@ em, i.brandmark-italic { font-style: italic; }
 .emi-wrap { padding-inline: var(--sc-gutter); display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(2rem, 4vw, 4rem); align-items: center; max-width: var(--sc-maxw); margin-inline: auto; }
 .emi-panel { border: 1px solid color-mix(in oklab, var(--cream) 24%, transparent); border-radius: var(--sc-r-lg); padding: clamp(1.6rem, 2.6vw, 2.2rem); }
 .emi-panel__top { display: flex; justify-content: space-between; align-items: baseline; font-size: var(--sc-t-sm); font-weight: 700; text-transform: uppercase; letter-spacing: var(--sc-track-wide); color: color-mix(in oklab, var(--cream) 70%, transparent); }
-.emi-panel__top output { font-family: var(--sc-font-display); font-size: var(--sc-t-xl); color: var(--sc-accent); font-weight: 700; letter-spacing: var(--sc-track-snug); text-transform: none; }
+.emi-panel__top output { font-family: var(--sc-font-display); font-size: var(--sc-t-xl); color: var(--cream); font-weight: 700; letter-spacing: var(--sc-track-snug); text-transform: none; }
 .emi-slider { width: 100%; margin: 1.1rem 0 0.4rem; height: 4px; appearance: none; border-radius: 4px; background: color-mix(in oklab, var(--cream) 22%, transparent); }
-.emi-slider::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--sc-accent); border: 3px solid var(--forest); cursor: pointer; }
+.emi-slider::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--cream); border: 3px solid var(--forest); cursor: pointer; }
 .emi-scale { display: flex; justify-content: space-between; font-size: var(--sc-t-xs); color: color-mix(in oklab, var(--cream) 60%, transparent); }
 .emi-tenure { display: flex; gap: 0.5rem; margin-top: 1.4rem; flex-wrap: wrap; }
 .emi-tenure button { flex: 1 1 auto; min-width: 4.6rem; padding: 0.6rem 0.5rem; border-radius: var(--sc-r-pill); border: 1px solid color-mix(in oklab, var(--cream) 30%, transparent); background: transparent; color: var(--cream); font-weight: 700; font-size: var(--sc-t-sm); cursor: pointer; transition: background 180ms, color 180ms, border-color 180ms; }
-.emi-tenure button.is-active { background: var(--sc-accent); border-color: var(--sc-accent); color: var(--sc-accent-ink); }
+.emi-tenure button.is-active { background: var(--cream); border-color: var(--cream); color: var(--sc-ink); }
 .emi-hint { margin-top: 1.3rem; padding-top: 1.1rem; border-top: 1px solid color-mix(in oklab, var(--cream) 20%, transparent); font-size: var(--sc-t-xs); color: color-mix(in oklab, var(--cream) 68%, transparent); line-height: 1.6; }
-.emi-result { border: 1px solid color-mix(in oklab, var(--cream) 24%, transparent); border-radius: var(--sc-r-lg); padding: clamp(1.8rem, 3vw, 2.4rem); background: color-mix(in oklab, var(--sc-accent) 8%, transparent); }
+.emi-result { border: 1px solid color-mix(in oklab, var(--cream) 24%, transparent); border-radius: var(--sc-r-lg); padding: clamp(1.8rem, 3vw, 2.4rem); background: color-mix(in oklab, var(--cream) 8%, transparent); }
 .emi-result__label { font-size: var(--sc-t-sm); font-weight: 700; text-transform: uppercase; letter-spacing: var(--sc-track-wide); color: color-mix(in oklab, var(--cream) 74%, transparent); }
-.emi-result__amount { margin-top: 0.6rem; font-family: var(--sc-font-display); font-size: clamp(2.4rem, 4.6vw, 3.6rem); font-weight: 700; color: var(--sc-accent); letter-spacing: var(--sc-track-snug); }
+.emi-result__amount { margin-top: 0.6rem; font-family: var(--sc-font-display); font-size: clamp(2.4rem, 4.6vw, 3.6rem); font-weight: 700; color: var(--cream); letter-spacing: var(--sc-track-snug); }
 .emi-result__amount span { font-family: var(--sc-font-text); font-size: 0.9rem; font-weight: 600; color: color-mix(in oklab, var(--cream) 64%, transparent); margin-left: 0.5rem; }
 .emi-result__stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-top: 1.6rem; background: color-mix(in oklab, var(--cream) 16%, transparent); }
 .emi-result__stat { background: var(--forest); padding: 1rem 1.2rem; display: flex; flex-direction: column; gap: 0.4rem; }
@@ -383,6 +455,33 @@ em, i.brandmark-italic { font-style: italic; }
 .dealer-card a { margin-top: 0.3rem; font-size: var(--sc-t-xs); font-weight: 700; color: var(--forest); }
 .dealer-empty { padding: 3rem 1.5rem; text-align: center; border: 1px dashed var(--line); border-radius: var(--sc-r-md); color: var(--sc-ink-soft); }
 @media (max-width: 760px) { .dealer-search { grid-template-columns: 1fr; } .dealer-results { grid-template-columns: 1fr; } }
+
+/* ---------------------------------------------------------- dealer cta -- */
+/* A different audience gets a different register: dark instead of the
+   surrounding white dealer-search act, Hindi carrying the headline with
+   English underneath it (same idiom the old hero's trust chip used), the
+   whole banner one link rather than text next to a button. */
+.dealer-cta { background: var(--sc-ink); }
+.dealer-cta__link { display: block; }
+.dealer-cta__inner { max-width: 40rem; padding-block: clamp(3.5rem, 7vw, 6rem); margin-inline: auto; text-align: center; }
+.dealer-cta__hi {
+  display: flex; flex-direction: column; gap: 0.55rem; align-items: center;
+  font-family: var(--sc-font-display); font-weight: 800; color: var(--cream);
+  font-size: clamp(2.1rem, 6vw, 3.4rem); line-height: 1.15;
+}
+.dealer-cta__hi span { font-family: var(--sc-font-text); font-weight: 600; font-size: var(--sc-t-lg); color: color-mix(in oklab, var(--cream) 68%, transparent); }
+.dealer-cta__body { margin: 1.3rem auto 0; max-width: 40ch; color: color-mix(in oklab, var(--cream) 74%, transparent); line-height: 1.65; }
+.dealer-cta__body-hi { display: block; margin-top: 0.45rem; font-family: var(--sc-font-display); }
+.dealer-cta__cta {
+  display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.9rem;
+  color: var(--cream); font-weight: 700; font-size: var(--sc-t-base);
+}
+.dealer-cta__cta span { transition: transform 200ms var(--sc-ease-out); }
+.dealer-cta__link:hover .dealer-cta__cta span { transform: translateX(4px); }
+@media (hover: hover) and (pointer: fine) {
+  .dealer-cta__link { transition: background 220ms var(--sc-ease-out); }
+  .dealer-cta__link:hover { background: color-mix(in oklab, var(--sc-ink) 100%, var(--cream) 6%); }
+}
 
 /* --------------------------------------------------------------- FAQ ---- */
 .faq-list { max-width: 46rem; margin: 0 auto; border-top: 1px solid var(--line); }
@@ -455,7 +554,7 @@ em, i.brandmark-italic { font-style: italic; }
 }
 /* On a dark (forest) ground the bright accent reads fine again — it's only
    light-on-light that fails. */
-.trust-stage .eyebrow, .emi-stage .eyebrow, .close-stage .eyebrow { color: var(--sc-accent); }
+.trust-stage .eyebrow, .emi-stage .eyebrow, .close-stage .eyebrow { color: var(--cream); }
 .partner-strip { display: flex; flex-wrap: wrap; align-items: center; gap: clamp(1.6rem, 4vw, 3.2rem); }
 .partner-strip img { height: clamp(1.5rem, 2.4vw, 2rem); width: auto; filter: grayscale(1) contrast(1.1); opacity: 0.72; transition: opacity 200ms, filter 200ms; }
 .partner-strip img:hover { filter: none; opacity: 1; }
@@ -528,13 +627,18 @@ em, i.brandmark-italic { font-style: italic; }
 .feature-band__body p.sc-body { margin-top: 1rem; max-width: 32ch; color: color-mix(in oklab, var(--cream) 78%, transparent); }
 .feature-band__stats { display: flex; gap: clamp(1.2rem, 3vw, 2rem); margin-top: 1.8rem; flex-wrap: wrap; }
 .feature-band__stats div { display: flex; flex-direction: column; gap: 0.2rem; }
-.feature-band__stats strong { font-family: var(--sc-font-display); font-size: 1.3rem; color: var(--sc-accent); }
+.feature-band__stats strong { font-family: var(--sc-font-display); font-size: 1.3rem; color: var(--cream); }
 .feature-band__stats span { font-size: var(--sc-t-xs); color: color-mix(in oklab, var(--cream) 68%, transparent); }
 @media (max-width: 900px) { .feature-band { grid-template-columns: 1fr; } }
 
 /* ----------------------------------------------------------- quick actions -- */
 /* Ather-style "what did you come here to do" strip: a named section, four
    direct actions, no reading required. Sits right under the hero. */
+/* Own background rather than leaning on the page-wide canvas drift: it now
+   sits right after the dark dealer banner, and the drift variable's own
+   smoothing takes longer to settle back to light than this section is
+   tall, which left a dark bleed across its first couple hundred pixels. */
+.quick-actions { background: var(--cream); }
 .quick-actions__heading { text-align: center; }
 .quick-actions__grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: clamp(0.8rem, 1.6vw, 1.1rem); }
 .quick-actions__card {
@@ -616,31 +720,10 @@ em, i.brandmark-italic { font-style: italic; }
   /* The bar floats over the page end, so give the last block room. */
   .site-footer { padding-bottom: 6rem; }
 
-  /* ---- hero: even, thumb-sized buttons (layout only) ----------------- */
-  /* .sc-copy--lead is bottom-anchored at a fixed distance from the stage's
-     own bottom edge (engine default: clamp(3rem,12vh,9rem)). A flat floor
-     here previously pushed the WHOLE block up on short viewports far enough
-     that the eyebrow/headline slid behind the fixed nav — fixing the CTA
-     row's clearance by breaking the headline's. Add the safe-area inset on
-     top of the engine's own responsive clamp instead of replacing it, so
-     tall phones still get gesture-bar clearance without moving short ones. */
-  .hero-copy {
-    bottom: calc(clamp(3rem, 12vh, 9rem) + env(safe-area-inset-bottom));
-  }
-  .hero-cta-row { gap: 0.6rem; flex-wrap: nowrap; }
-  .hero-cta-row .btn {
-    flex: 1; justify-content: center; padding: 0.9rem 0.6rem;
-    font-size: 0.9rem; white-space: nowrap;
-  }
-  /* Short viewports (small phones, or a phone with the address bar still
-     showing): shrink the stack so its top never has a chance to reach the
-     nav, rather than trying to out-position an unknown content height. */
-  @media (max-height: 700px) {
-    .hero-copy h1 { font-size: clamp(2rem, 9vw, 2.6rem); }
-    .hero-copy .sc-body { font-size: 0.95rem; }
-    .hero-eyebrow { margin-bottom: 0.5rem; }
-    .hero-copy { bottom: calc(clamp(2rem, 8vh, 5rem) + env(safe-area-inset-bottom)); }
-  }
+  /* ---- hero: heading takes over as the dominant element, not the mark -- */
+  .hero-simple { height: 100svh; min-height: 24rem; }
+  .hero-simple__heading { font-size: clamp(2rem, 9vw, 2.6rem); max-width: 14ch; }
+  .hero-simple__sub { font-size: 0.95rem; max-width: 32ch; }
 
   /* ---- section rhythm and headline treatment ------------------------ */
   .feature-spotlight, .feature-duo { gap: 1.4rem; }
@@ -744,9 +827,9 @@ em, i.brandmark-italic { font-style: italic; }
   position: relative; z-index: 1; width: min(26rem, 100%);
   max-height: min(42rem, 90vh); overflow-y: auto;
   background:
-    linear-gradient(155deg, color-mix(in oklab, var(--sc-accent) 7%, transparent), transparent 40%),
+    linear-gradient(155deg, color-mix(in oklab, var(--cream) 7%, transparent), transparent 40%),
     var(--sc-ink);
-  border: 1px solid color-mix(in oklab, var(--sc-accent) 32%, transparent);
+  border: 1px solid color-mix(in oklab, var(--cream) 22%, transparent);
   border-radius: 1.25rem;
   padding: clamp(1.8rem, 4vw, 2.4rem);
   box-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.55);
@@ -762,7 +845,7 @@ em, i.brandmark-italic { font-style: italic; }
 /* HUD corner brackets, a fixed 18px L at each corner of the panel. */
 .tr-modal__corner {
   position: absolute; width: 18px; height: 18px; pointer-events: none;
-  border: 1.5px solid var(--sc-accent); opacity: 0.75;
+  border: 1.5px solid var(--cream); opacity: 0.6;
 }
 .tr-modal__corner--tl { top: -1px; left: -1px; border-width: 1.5px 0 0 1.5px; border-radius: 6px 0 0 0; }
 .tr-modal__corner--tr { top: -1px; right: -1px; border-width: 1.5px 1.5px 0 0; border-radius: 0 6px 0 0; }
@@ -776,7 +859,7 @@ em, i.brandmark-italic { font-style: italic; }
 }
 .tr-modal__scan::after {
   content: ''; position: absolute; left: 0; right: 0; height: 40%;
-  background: linear-gradient(to bottom, transparent, color-mix(in oklab, var(--sc-accent) 7%, transparent), transparent);
+  background: linear-gradient(to bottom, transparent, color-mix(in oklab, var(--cream) 8%, transparent), transparent);
   animation: tr-scan 7s linear infinite;
 }
 @keyframes tr-scan {
@@ -796,16 +879,19 @@ em, i.brandmark-italic { font-style: italic; }
 .tr-modal__close:hover { background: color-mix(in oklab, var(--cream) 14%, transparent); color: var(--cream); }
 .tr-modal__close:active { transform: scale(0.92); }
 
+/* The one deliberate green note left in the whole UI: a small tag-style
+   label and a single emphasised word, the same restrained role green plays
+   on Ola's own site (a "New"/"Gen3" badge, not a systemic accent colour). */
 .tr-modal__eyebrow {
   display: block; font-family: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", monospace;
   font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em;
-  color: var(--sc-accent); margin-bottom: 0.7rem;
+  color: var(--sc-badge); margin-bottom: 0.7rem;
 }
 .tr-modal__panel h3 {
   margin: 0; font-family: var(--sc-font-display); font-weight: 800;
   font-size: clamp(1.5rem, 4vw, 1.85rem); color: var(--cream); letter-spacing: var(--sc-track-snug);
 }
-.tr-modal__panel h3 em { color: var(--sc-accent); font-style: italic; }
+.tr-modal__panel h3 em { color: var(--sc-badge); font-style: italic; }
 .tr-modal__panel > .tr-modal__head > p {
   margin: 0.6rem 0 0; font-size: var(--sc-t-sm); line-height: 1.55;
   color: color-mix(in oklab, var(--cream) 62%, transparent); max-width: 34ch;
@@ -827,18 +913,20 @@ em, i.brandmark-italic { font-style: italic; }
 }
 .tr-field input::placeholder { color: color-mix(in oklab, var(--cream) 38%, transparent); }
 .tr-field input:focus-visible {
-  outline: none; border-color: var(--sc-accent);
+  outline: none; border-color: var(--cream);
   background: color-mix(in oklab, var(--cream) 9%, transparent);
 }
 
+/* Sits on the dark panel, so — same as the product-card buttons — this
+   inverts to light-on-dark rather than using --sc-accent. */
 .tr-form__submit {
   margin-top: 0.4rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
   width: 100%; min-height: 50px; border-radius: var(--sc-r-pill); border: 0;
-  background: var(--sc-accent); color: var(--sc-accent-ink);
+  background: var(--cream); color: var(--sc-ink);
   font-size: 0.9rem; font-weight: 700; cursor: pointer;
   transition: transform 160ms var(--sc-ease-out), background 160ms var(--sc-ease-out);
 }
-.tr-form__submit:hover { background: color-mix(in oklab, var(--sc-accent) 88%, black 6%); }
+.tr-form__submit:hover { background: #FFFFFF; }
 .tr-form__submit:active { transform: scale(0.97); }
 .tr-form__submit-arrow { transition: transform 200ms var(--sc-ease-out); }
 .tr-form__submit:hover .tr-form__submit-arrow { transform: translateX(3px); }
@@ -869,8 +957,8 @@ em, i.brandmark-italic { font-style: italic; }
   position: fixed; z-index: 55; right: clamp(1rem, 3vw, 1.8rem); bottom: clamp(1rem, 3vw, 1.8rem);
   width: 62px; height: 62px; padding: 0; border-radius: 50%; border: 0; cursor: pointer;
   display: grid; place-items: center;
-  background: var(--sc-ink); color: var(--sc-accent);
-  box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.45), inset 0 0 0 1px color-mix(in oklab, var(--sc-accent) 30%, transparent);
+  background: var(--sc-ink); color: var(--cream);
+  box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.45), inset 0 0 0 1px color-mix(in oklab, var(--cream) 22%, transparent);
   opacity: 1; transform: scale(1);
   transition: opacity 220ms var(--sc-ease-out), transform 220ms var(--sc-ease-out), box-shadow 200ms var(--sc-ease-out);
 }
@@ -881,7 +969,7 @@ em, i.brandmark-italic { font-style: italic; }
    no blurred colour-halo shadow, so it reads as a pulse, not a glow. */
 .tr-fab__ring {
   position: absolute; inset: 0; border-radius: 50%;
-  border: 1.5px solid var(--sc-accent);
+  border: 1.5px solid var(--cream);
   animation: tr-fab-pulse 2.6s var(--sc-ease-out) infinite;
 }
 @keyframes tr-fab-pulse {
@@ -897,7 +985,7 @@ em, i.brandmark-italic { font-style: italic; }
   transition: opacity 180ms var(--sc-ease-out), transform 180ms var(--sc-ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
-  .tr-fab:hover { box-shadow: 0 18px 36px -10px rgba(0, 0, 0, 0.5), inset 0 0 0 1px color-mix(in oklab, var(--sc-accent) 55%, transparent); }
+  .tr-fab:hover { box-shadow: 0 18px 36px -10px rgba(0, 0, 0, 0.5), inset 0 0 0 1px color-mix(in oklab, var(--cream) 45%, transparent); }
   .tr-fab:hover .tr-fab__label { opacity: 1; transform: translateY(-50%) translateX(0); }
 }
 

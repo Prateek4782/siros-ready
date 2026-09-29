@@ -267,7 +267,7 @@ const sirosPhone = window.matchMedia('(max-width: 760px)');
   if (!chip || !label) return;
 
   const MAP = [
-    ['section[data-sc-act="scrub"]', 'Overview'],
+    ['.hero-simple', 'Overview'],
     ['#trust', 'Why SIROS'],
     ['.cost-section', 'Running cost'],
     ['#range', 'Vehicles'],
@@ -312,11 +312,11 @@ const sirosPhone = window.matchMedia('(max-width: 760px)');
 
 /* ------------------------------------------------ bottom action bar (phone) -- */
 /* Both real actions stay within thumb reach for the whole page. It stays
-   out of the way over the hero (which carries its own CTAs) and over the
-   closing act (which is one big CTA already). */
+   out of the way over the hero (a plain brand video, no CTAs of its own to
+   compete with) and over the closing act (which is one big CTA already). */
 (function mobileActionBar() {
   const bar = document.querySelector('#actionBar');
-  const hero = document.querySelector('section[data-sc-act="scrub"]');
+  const hero = document.querySelector('.hero-simple');
   const close = document.querySelector('#close');
   if (!bar) return;
   let queued = false;
@@ -418,6 +418,11 @@ const TEST_RIDE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx3y-ziQXL8
    per tab — the floating button is never capped, since choosing to tap it
    is never an interruption. */
 (function testRideModal() {
+  // The dealer-application page is its own B2B flow with its own CTA — a
+  // consumer "book a test ride" prompt interrupting it is off-message, so
+  // this whole feature sits out on that one page.
+  if (document.querySelector('#dealerAppModal')) return;
+
   const SHOWN_KEY = 'sirosTestRideShown';
   let alreadyShown = false;
   try { alreadyShown = sessionStorage.getItem(SHOWN_KEY) === '1'; } catch (e) { /* private mode etc. */ }
@@ -595,4 +600,94 @@ const TEST_RIDE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx3y-ziQXL8
   // The automatic pop stays capped at once per tab; the floating button
   // above is the permanent, uncapped way in, so it attaches regardless.
   if (!alreadyShown) window.addEventListener('scroll', onScroll, { passive: true });
+})();
+
+/* -------------------------------------------------------------- dealer application -- */
+/* Paste your Google Apps Script Web App URL here to log dealer applications
+   into their own Google Sheet — separate from TEST_RIDE_SHEET_URL above, so
+   the two lists never mix. See apps-script/dealer-application-sheet.gs.
+   Leave blank and the form still works (mailto only), same as the test-ride
+   one. Only dealer.html has the markup this targets, so this whole block is
+   a no-op everywhere else. */
+const DEALER_APP_SHEET_URL = '';
+
+(function dealerApplicationModal() {
+  const modal = document.querySelector('#dealerAppModal');
+  const openBtn = document.querySelector('#dealerAppOpen');
+  const form = document.querySelector('#dealerAppForm');
+  if (!modal || !form) return;
+
+  const panel = modal.querySelector('.tr-modal__panel');
+  const head = modal.querySelector('.tr-modal__head');
+  let closeTimer = null;
+
+  function resetForm() {
+    clearTimeout(closeTimer);
+    const done = panel.querySelector('.tr-form__done');
+    if (done) done.remove();
+    form.hidden = false;
+    head.hidden = false;
+    form.reset();
+  }
+
+  function open() {
+    resetForm();
+    modal.hidden = false;
+    document.documentElement.style.overflow = 'hidden';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      modal.classList.add('is-open');
+      form.querySelector('input[name="name"]')?.focus({ preventScroll: true });
+    }));
+  }
+
+  function close() {
+    if (modal.hidden) return;
+    clearTimeout(closeTimer);
+    modal.classList.add('is-closing');
+    modal.classList.remove('is-open');
+    document.documentElement.style.overflow = '';
+    window.setTimeout(() => { modal.hidden = true; modal.classList.remove('is-closing'); }, 200);
+  }
+
+  openBtn?.addEventListener('click', open);
+  modal.querySelectorAll('[data-dl-close]').forEach((el) => el.addEventListener('click', close));
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) close(); });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const name = String(data.get('name') || '').trim();
+    const business = String(data.get('business') || '').trim();
+    const phone = String(data.get('phone') || '').trim();
+    const city = String(data.get('city') || '').trim();
+    const message = String(data.get('message') || '').trim();
+    const subject = encodeURIComponent('Dealer application');
+    const bodyLines = [
+      `Name: ${name}`, business ? `Business: ${business}` : null,
+      `Phone: ${phone}`, `City: ${city}`, message ? `Message: ${message}` : null,
+    ].filter(Boolean);
+    const body = encodeURIComponent(bodyLines.join('\n'));
+    const mailto = `mailto:info@sirosvehicles.com?subject=${subject}&body=${body}`;
+
+    if (DEALER_APP_SHEET_URL) {
+      fetch(DEALER_APP_SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: new URLSearchParams({ name, business, phone, city, message, page: location.pathname }),
+      }).catch(() => { /* best-effort; the mailto is the real fallback */ });
+    }
+
+    head.hidden = true;
+    form.hidden = true;
+    const done = document.createElement('div');
+    done.className = 'tr-form__done';
+    const strong = document.createElement('strong');
+    strong.textContent = `Thanks, ${name.split(' ')[0] || 'there'}.`;
+    const span = document.createElement('span');
+    span.textContent = 'Opening your mail app to send it through…';
+    done.append(strong, span);
+    panel.appendChild(done);
+    window.location.href = mailto;
+    closeTimer = window.setTimeout(close, 2200);
+  });
 })();

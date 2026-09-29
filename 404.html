@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Page not found — SIROS</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/brand/mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="scrollcraft.css">
+<link rel="stylesheet" href="site.css">
+<style>
+  .error-page {
+    min-height: 100svh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    padding: clamp(6rem,10vw,8rem) var(--sc-gutter) 4rem;
+  }
+  .error-page__code {
+    font-family: var(--sc-font-display); font-weight: 800; line-height: 1;
+    font-size: clamp(5rem, 16vw, 9rem); color: var(--sc-ink);
+    letter-spacing: var(--sc-track-snug);
+  }
+  .error-page__code em { color: var(--sc-badge); font-style: italic; }
+  .error-page__hi { margin-top: 0.5rem; font-family: var(--sc-font-display); font-weight: 800; font-size: clamp(1.5rem,3.4vw,2.1rem); color: var(--sc-ink); }
+  .error-page__body { margin: 1.1rem auto 0; max-width: 36ch; color: var(--sc-ink-soft); font-size: var(--sc-t-base); line-height: 1.6; }
+  .error-page__actions { display: flex; gap: 0.9rem; justify-content: center; flex-wrap: wrap; margin-top: 2.2rem; }
+  .error-page__actions .btn { min-width: 11rem; }
+  .error-page__links { margin-top: 2.6rem; display: flex; gap: 1.4rem; flex-wrap: wrap; justify-content: center; font-size: var(--sc-t-sm); }
+  .error-page__links a { color: var(--sc-ink-soft); }
+  .error-page__links a:hover { color: var(--sc-ink); }
+  .site-footer { background: var(--cream); border-top: 1px solid var(--line); padding: clamp(2rem,4vw,3rem) var(--sc-gutter) 2rem; }
+  .site-footer__bottom { max-width: var(--sc-maxw); margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.6rem; font-size: var(--sc-t-xs); color: var(--sc-ink-soft); }
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Primary">
+  <a class="nav__brand" href="index.html#top">
+    <img src="assets/brand/mark.png" alt="" width="44" height="44">
+    <span class="nav__wordmark">SIROS</span>
+  </a>
+  <div class="nav__links">
+    <a href="index.html#range">Vehicles</a>
+    <a href="index.html#trust">Why SIROS</a>
+    <a href="index.html#emi">Ownership</a>
+    <a href="dealers.html">Dealers</a>
+    <a href="dealer.html">Become a Dealer</a>
+    <a href="index.html#faq">FAQ</a>
+  </div>
+  <div class="nav__actions">
+    <a class="btn btn--accent" href="mailto:info@sirosvehicles.com">Talk to SIROS</a>
+    <button class="nav__menu-btn" id="navMenuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <button class="mobile-menu__close" id="mobileMenuClose" aria-label="Close menu">✕</button>
+  <a href="index.html#range">Vehicles</a>
+  <a href="index.html#trust">Why SIROS</a>
+  <a href="index.html#emi">Ownership</a>
+  <a href="dealers.html">Dealers</a>
+  <a href="dealer.html">Become a Dealer</a>
+  <a href="index.html#faq">FAQ</a>
+  <a href="mailto:info@sirosvehicles.com">Talk to SIROS</a>
+</div>
+
+<main>
+  <section class="error-page">
+    <p class="error-page__code">4<em>0</em>4</p>
+    <h1 class="error-page__hi">This route doesn't exist yet.</h1>
+    <p class="error-page__body">The page you're looking for was moved, renamed, or never built. Head back to the range, or find your nearest dealer.</p>
+    <div class="error-page__actions">
+      <a class="btn btn--accent" href="index.html#top">Back to home</a>
+      <a class="btn" href="index.html#range">See the range</a>
+    </div>
+    <div class="error-page__links">
+      <a href="models.html">All 11 models</a>
+      <a href="dealers.html">Find a dealer</a>
+      <a href="dealer.html">Become a dealer</a>
+      <a href="mailto:info@sirosvehicles.com">Talk to SIROS</a>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="site-footer__bottom">
+      <span>© 2026 SIROS Vehicles Pvt. Ltd.</span>
+      <span>Sirsa, Haryana · Jhalawar, Rajasthan · Gurugram, Haryana</span>
+      <span>info@sirosvehicles.com</span>
+    </div>
+  </footer>
+</main>
+
+<script src="site.js"></script>
+</body>
+</html>

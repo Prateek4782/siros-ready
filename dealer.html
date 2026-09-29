@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Become a SIROS dealer</title>
+<meta name="description" content="Bring SIROS electric vehicles to your city. Real margins, full training, and genuine EV demand — apply to become a SIROS dealer.">
+<link rel="icon" href="assets/brand/mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="scrollcraft.css">
+<link rel="stylesheet" href="site.css">
+<style>
+  .dealer-hero { padding: clamp(7rem,12vw,10rem) var(--sc-gutter) clamp(2.5rem,5vw,3.5rem); max-width: 44rem; margin: 0 auto; text-align: center; }
+  .dealer-hero__hi { font-family: var(--sc-font-display); font-weight: 800; font-size: clamp(2.4rem,6vw,3.8rem); line-height: 1.12; }
+  .dealer-hero__hi em { color: var(--sc-accent); font-style: italic; }
+  .dealer-hero p.sc-body { margin: 1.1rem auto 0; max-width: 40ch; }
+
+  .dealer-benefits { padding: 0 var(--sc-gutter) clamp(3rem,6vw,4.5rem); max-width: var(--sc-maxw); margin: 0 auto; }
+  .dealer-benefits__grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(0.9rem, 1.6vw, 1.3rem); }
+  .benefit-card { background: var(--sc-surface); border: 1px solid var(--line); border-radius: var(--sc-r-lg); padding: 1.6rem 1.4rem; }
+  .benefit-card__icon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: var(--sc-r-md); background: var(--cream); color: var(--sc-accent); margin-bottom: 1rem; }
+  .benefit-card__icon svg { width: 20px; height: 20px; }
+  .benefit-card h3 { margin: 0 0 0.4rem; font-family: var(--sc-font-display); font-size: 1.05rem; font-weight: 700; }
+  .benefit-card p { margin: 0; font-size: var(--sc-t-sm); color: var(--sc-ink-soft); line-height: 1.55; }
+  @media (max-width: 900px) { .dealer-benefits__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .dealer-benefits__grid { grid-template-columns: 1fr; } }
+
+  .dealer-actions { padding: 0 var(--sc-gutter) clamp(4.5rem,8vw,7rem); max-width: 34rem; margin: 0 auto; text-align: center; }
+  .dealer-actions__row { display: flex; gap: 0.9rem; justify-content: center; flex-wrap: wrap; margin-top: 1.6rem; }
+  .dealer-actions__row .btn { min-width: 11rem; }
+  .dealer-actions p.sc-body { max-width: 36ch; margin-inline: auto; }
+
+  .site-footer { background: var(--cream); border-top: 1px solid var(--line); padding: clamp(3rem,5vw,4.5rem) var(--sc-gutter) 2rem; }
+  .site-footer__bottom { max-width: var(--sc-maxw); margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.6rem; font-size: var(--sc-t-xs); color: var(--sc-ink-soft); padding-top: 1.4rem; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Primary">
+  <a class="nav__brand" href="index.html#top">
+    <img src="assets/brand/mark.png" alt="" width="44" height="44">
+    <span class="nav__wordmark">SIROS</span>
+  </a>
+  <div class="nav__links">
+    <a href="index.html#range">Vehicles</a>
+    <a href="index.html#trust">Why SIROS</a>
+    <a href="index.html#emi">Ownership</a>
+    <a href="dealers.html">Dealers</a>
+    <a href="dealer.html" aria-current="page">Become a Dealer</a>
+    <a href="index.html#faq">FAQ</a>
+  </div>
+  <div class="nav__actions">
+    <a class="btn btn--accent" href="mailto:info@sirosvehicles.com">Talk to SIROS</a>
+    <button class="nav__menu-btn" id="navMenuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <button class="mobile-menu__close" id="mobileMenuClose" aria-label="Close menu">✕</button>
+  <a href="index.html#range">Vehicles</a>
+  <a href="index.html#trust">Why SIROS</a>
+  <a href="index.html#emi">Ownership</a>
+  <a href="dealers.html">Dealers</a>
+  <a href="dealer.html">Become a Dealer</a>
+  <a href="index.html#faq">FAQ</a>
+  <a href="mailto:info@sirosvehicles.com">Talk to SIROS</a>
+</div>
+
+<main>
+  <header class="dealer-hero">
+    <p class="eyebrow" style="color:var(--accent-text)">For businesses</p>
+    <h1 class="dealer-hero__hi">डीलर बनें.<br><em>Become a SIROS dealer.</em></h1>
+    <p class="sc-body">Bring electric mobility to your city. Real margins, full training, and genuine demand — not just in the metros.</p>
+  </header>
+
+  <section class="dealer-benefits">
+    <div class="dealer-benefits__grid">
+      <div class="benefit-card">
+        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5.5c0-1.9-2.2-3.5-5-3.5S7 3.6 7 5.5 9.2 9 12 9s5 1.6 5 3.5-2.2 3.5-5 3.5-5-1.6-5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+        <h3>Real margins</h3>
+        <p>Straightforward dealer pricing on every model, confirmed when you apply — not buried in fine print.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19.5V6a2 2 0 0 1 2-2h9l5 5v10.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 13h8M8 17h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+        <h3>Full training</h3>
+        <p>Product, service and sales onboarding before you open your doors, plus ongoing support after.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <h3>Fast setup</h3>
+        <p>A lean showroom footprint and straightforward stocking, built to get you selling quickly.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12s3.5-7 9-7 9 7 9 7-3.5 7-9 7-9-7-9-7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.6" stroke="currentColor" stroke-width="1.6"/></svg></span>
+        <h3>Real EV demand</h3>
+        <p>Electric mobility is moving past the metros — SIROS is built for the routes and roads your customers actually ride.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 9h18M8 14h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+        <h3>Financing support</h3>
+        <p>Partner lenders already in place — Bajaj Finserv and ICICI Lombard — so your customers can say yes on the spot.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.1 7-11.5A7 7 0 1 0 5 9.5C5 14.9 12 21 12 21z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="2.4" stroke="currentColor" stroke-width="1.6"/></svg></span>
+        <h3>A dedicated region</h3>
+        <p>One point of contact at SIROS who knows your market, not a support queue.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="dealer-actions">
+    <p class="sc-body">Have a showroom or workshop already? Tell us about it — we reply to every application.</p>
+    <div class="dealer-actions__row">
+      <a class="btn" href="models.html">View products</a>
+      <button class="btn btn--accent" type="button" id="dealerAppOpen">Apply as dealer</button>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="site-footer__bottom">
+      <span>© 2026 SIROS Vehicles Pvt. Ltd.</span>
+      <span>Sirsa, Haryana · Jhalawar, Rajasthan · Gurugram, Haryana</span>
+      <span>info@sirosvehicles.com</span>
+    </div>
+  </footer>
+</main>
+
+<!-- Dealer application modal: same HUD-styled component as the test-ride
+     form (.tr-modal / .tr-form / .card-btn are generic, defined in
+     site.css), opened only by the button above — no scroll trigger, no
+     floating launcher, since this whole page already exists for one job. -->
+<div class="tr-modal" id="dealerAppModal" hidden role="presentation">
+  <div class="tr-modal__backdrop" data-dl-close></div>
+  <div class="tr-modal__panel" role="dialog" aria-modal="true" aria-labelledby="dealerAppTitle">
+    <div class="tr-modal__scan" aria-hidden="true"></div>
+    <div class="tr-modal__corner tr-modal__corner--tl" aria-hidden="true"></div>
+    <div class="tr-modal__corner tr-modal__corner--tr" aria-hidden="true"></div>
+    <div class="tr-modal__corner tr-modal__corner--bl" aria-hidden="true"></div>
+    <div class="tr-modal__corner tr-modal__corner--br" aria-hidden="true"></div>
+    <button class="tr-modal__close" type="button" data-dl-close aria-label="Close">✕</button>
+    <div class="tr-modal__head">
+      <span class="tr-modal__eyebrow">// DEALER APPLICATION</span>
+      <h3 id="dealerAppTitle">Bring SIROS <em>to your city.</em></h3>
+      <p>Tell us a little about you. A SIROS rep follows up within a few days.</p>
+    </div>
+    <form class="tr-form" id="dealerAppForm">
+      <label class="tr-field"><span>Full name</span>
+        <input type="text" name="name" required autocomplete="name">
+      </label>
+      <label class="tr-field"><span>Business / firm name</span>
+        <input type="text" name="business" autocomplete="organization">
+      </label>
+      <label class="tr-field"><span>Phone number</span>
+        <input type="tel" name="phone" required autocomplete="tel" pattern="[0-9+\s\-]{7,15}">
+      </label>
+      <label class="tr-field"><span>City</span>
+        <input type="text" name="city" required autocomplete="address-level2">
+      </label>
+      <label class="tr-field"><span>Anything else? (optional)</span>
+        <input type="text" name="message" placeholder="Existing showroom, workshop, EV experience…">
+      </label>
+      <button class="tr-form__submit" type="submit">
+        <span>Submit application</span><span class="tr-form__submit-arrow" aria-hidden="true">→</span>
+      </button>
+      <p class="tr-form__note">Opens your mail app to info@sirosvehicles.com — a SIROS rep replies within a few days.</p>
+    </form>
+  </div>
+</div>
+
+<script src="products-data.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

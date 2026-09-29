@@ -27,6 +27,7 @@
     <a href="#trust">Why SIROS</a>
     <a href="#emi">Ownership</a>
     <a href="dealers.html">Dealers</a>
+    <a href="dealer.html">Become a Dealer</a>git s
     <a href="#faq">FAQ</a>
   </div>
   <button class="nav__section" id="navSection" aria-expanded="false" aria-controls="mobileMenu" aria-label="Jump to a section">
@@ -49,29 +50,44 @@
   <a href="#trust">Why SIROS</a>
   <a href="#emi">Ownership</a>
   <a href="dealers.html">Dealers</a>
+  <a href="dealer.html">Become a Dealer</a>
   <a href="#faq">FAQ</a>
   <a href="#close">Talk to SIROS</a>
 </div>
 
 <main id="top">
 
-  <!-- 1 · RECOGNITION — scrub. Real footage: a SIROS scooter assembling itself. -->
-  <section data-sc-act="scrub" data-sc-span="2.6" data-sc-dwell="0.34" data-sc-drift="#FFFCF8">
-    <div data-sc-stage class="hero-stage">
-      <img class="sc-stage__poster" src="assets/01-hero-poster.webp" alt="">
-      <video data-sc-scrub data-sc-src="assets/01-hero.mp4" data-sc-src-mobile="assets/01-hero-m.mp4" muted playsinline></video>
-      <div class="sc-scrim sc-scrim--lead" aria-hidden="true"></div>
-      <div class="sc-copy sc-copy--lead hero-copy" data-sc-cue="0 0.78 0">
-        <p class="eyebrow hero-eyebrow">SIROS Vehicles Pvt. Ltd. · EV World</p>
-        <h1 class="sc-display sc-display--xl" data-sc-kinetic="lines">SIROS.<br><em>Electricity for every journey.</em></h1>
-        <p class="sc-body">Electric mobility manufactured at our own plant, for the pace of everyday India.</p>
-        <div class="hero-cta-row">
-          <a class="btn btn--accent" href="#range">See the range</a>
-          <a class="btn" href="#trust">Why trust SIROS <span aria-hidden="true">↓</span></a>
-        </div>
+  <!-- 1 · RECOGNITION — flow, not scrub. Real footage plays on its own in the
+       background; no scroll-scrubbing, no pin. A dark scrim sits over the
+       video so the heading reads clean regardless of which frame is showing. -->
+  <section class="hero-simple" data-sc-act="flow" data-sc-drift="#FFFCF8">
+    <video class="hero-simple__video" poster="assets/01-hero-poster.webp" autoplay muted loop playsinline>
+      <source src="assets/01-hero-m.mp4" media="(max-width: 760px)">
+      <source src="assets/01-hero.mp4">
+    </video>
+    <div class="hero-simple__content" data-sc-in>
+      <div class="hero-simple__brand">
+        <img class="hero-simple__mark" src="assets/brand/mark.png" alt="">
+        <span class="hero-simple__word">SIROS</span>
       </div>
-      <p class="hero-signature" data-sc-cue="0.1 0.78 0">10 साल का भरोसा<small>Ten years of trust</small></p>
+      <h1 class="hero-simple__heading">Electricity for <em>every journey.</em></h1>
+      <p class="hero-simple__sub">Electric mobility manufactured at our own plant, for the pace of everyday India.</p>
     </div>
+  </section>
+
+  <!-- Become a dealer — flow. A separate audience from the rest of the page:
+       dark, bilingual, one destination. No generated photo yet (none on
+       hand) — the weight comes from type and colour, same as the EMI and
+       trust acts already do. -->
+  <section class="dealer-cta" data-sc-act="flow" data-sc-drift="#181E22">
+    <a class="dealer-cta__link" href="dealer.html">
+      <div class="sc-wrap dealer-cta__inner" data-sc-in>
+        <p class="eyebrow" style="color:var(--cream)">For businesses</p>
+        <h2 class="dealer-cta__hi">डीलर बनें<span>Become a SIROS dealer</span></h2>
+        <p class="dealer-cta__body">Real margins, full training, and genuine demand for electric — bring SIROS to your city.<br><span class="dealer-cta__body-hi">अपने शहर में SIROS लाएँ। असली मुनाफ़ा, पूरी ट्रेनिंग, असली मांग।</span></p>
+        <span class="dealer-cta__cta">Explore dealership <span aria-hidden="true">→</span></span>
+      </div>
+    </a>
   </section>
 
   <!-- Quick actions — flow. The four things a visitor actually came to do. -->
@@ -111,73 +127,7 @@
     </div>
   </section>
 
-  <!-- About — flow. Who SIROS is, before the proof-points act makes the case. -->
-  <section class="sc-section meet-siros" data-sc-act="flow" data-sc-drift="#FFFCF8">
-    <div class="sc-wrap meet-siros__grid">
-      <div class="meet-siros__copy" data-sc-in data-sc-stagger="70">
-        <p class="eyebrow">About SIROS</p>
-        <h2 class="sc-display sc-display--lg">Meet SIROS.<br><em>Electric mobility with a practical purpose.</em></h2>
-        <p class="sc-body">SIROS Vehicles Pvt. Ltd. is building an electric mobility brand focused on accessible EVs, dependable products and service that stays with you beyond the purchase.</p>
-        <p class="sc-body meet-siros__vision">Our vision is to build a nationally recognized brand through durable products, advanced technology, best-in-class service and relationships built on trust.</p>
-      </div>
-      <div class="meet-siros__stats" data-sc-in data-sc-stagger="70" style="transition-delay:120ms">
-        <div class="meet-stat">
-          <strong>10+</strong>
-          <span>Years <br>of trust</span>
-        </div>
-        <div class="meet-stat">
-          <strong>EV World</strong>
-          <span>Electric <br>mobility</span>
-        </div>
-        <div class="meet-stat">
-          <strong>Multiple Models</strong>
-          <span>For different <br>everyday needs</span>
-        </div>
-        <div class="meet-stat">
-          <strong>Service &amp; Support</strong>
-          <span>Built around <br>ownership</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2 · REASSURANCE — pin. The peak. Ground: generated plant still. Ledger fires here. -->
-  <section id="trust" data-sc-act="pin" data-sc-span="5.2" data-sc-drift="#181E22">
-    <div data-sc-stage class="trust-stage">
-      <img class="sc-stage__poster" src="assets/03-plant.webp" alt="Rows of finished SIROS scooters outside the Sirsa plant">
-      <div class="trust-scrim" aria-hidden="true"></div>
-      <div class="trust-argument">
-        <p data-sc-cue="0 0.32 0 0.16" data-ledger-claim="Own manufacturing plant in Sirsa, Haryana" data-ledger-id="plant">SIROS is not a new badge.<small>Every vehicle is built at our own plant in Sirsa, Haryana. Not put together from someone else's parts.</small></p>
-        <p data-sc-cue="0.3 0.6 0.16 0.16" data-ledger-claim="3-year warranty on lithium battery packs" data-ledger-id="warranty"><b>10 साल का भरोसा.</b> Ten years of building, and a battery warranty that isn't a sales trick.<small>3 years on lithium packs, 1 year on lead-acid, on every model.</small></p>
-        <p data-sc-cue="0.58 0.86 0.16 0.16" data-ledger-claim="Financed by Bajaj Finserv, insured by ICICI Lombard" data-ledger-id="finance">Financed by Bajaj Finserv. Insured by ICICI Lombard.<small>Real finance and insurance partners, arranged when you buy. Not a random referral.</small></p>
-        <p data-sc-cue="0.84 1 0.18 0">A brand you'll still find in ten years.<small>We want to be known for one thing: a vehicle that keeps running long after the warranty card is forgotten.</small></p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3 · CANDOR — flow. Real, honest running-cost planner. -->
-  <section class="sc-section cost-section" data-sc-act="flow" data-sc-drift="#FFFCF8">
-    <div class="sc-wrap cost-grid">
-      <div class="sc-stack" data-sc-in data-sc-stagger="70">
-        <p class="eyebrow">The daily shift</p>
-        <h2 class="sc-display sc-display--lg">Let your commute<br>keep more for <em>you.</em></h2>
-        <p class="sc-body">Electric mobility changes more than what you ride. It changes what you spend to get around every day. This is a simple, honest illustration, not a promise.</p>
-      </div>
-      <div class="cost-panel" data-sc-in style="transition-delay:120ms">
-        <div class="cost-panel__top"><span>Your everyday distance</span><output id="distanceValue" for="distance">30 km / day</output></div>
-        <input class="cost-slider" id="distance" type="range" min="10" max="100" step="5" value="30" aria-label="Daily distance in kilometres">
-        <div class="cost-scale"><span>10 km</span><span>100 km</span></div>
-        <div class="cost-rows">
-          <div class="cost-row"><span>Petrol commute</span><strong id="petrolCost">₹2,100</strong></div>
-          <div class="cost-row cost-row--electric"><span>Electric commute</span><strong id="electricCost">₹240</strong></div>
-        </div>
-        <div class="cost-total"><span>Potential monthly difference</span><strong id="savingCost">₹1,860</strong></div>
-        <p class="cost-note">Illustrative only: petrol at ₹2.33/km, electricity at ₹0.27/km, 30 commuting days. Actual results vary with local prices, vehicle efficiency and riding conditions.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4 · DESIRE — pan. The real lineup, scrolled through by hand, not swiped. -->
+  <!-- 2 · DESIRE — pan. The real lineup, scrolled through by hand, not swiped. -->
   <section id="range" data-sc-act="pan" data-sc-span="2.4" data-sc-drift="#FFFCF8">
     <div data-sc-stage class="range-stage">
       <div class="range-stage__head sc-stack" data-sc-in data-sc-stagger="60">
@@ -213,8 +163,8 @@
 
       <div class="feature-band" style="margin-top:clamp(3rem,6vw,4.5rem)">
         <div class="feature-band__body">
-          <p class="eyebrow" style="color:var(--sc-accent)">Move a better tomorrow</p>
-          <h2 class="sc-display sc-display--md" style="color:var(--cream)">Smart. Stylish.<br><em style="color:var(--sc-accent)">Sustainable.</em></h2>
+          <p class="eyebrow" style="color:var(--cream)">Move a better tomorrow</p>
+          <h2 class="sc-display sc-display--md" style="color:var(--cream)">Smart. Stylish.<br><em style="color:var(--sc-badge)">Sustainable.</em></h2>
           <p class="sc-body">An electric ride built for the roads of today and the world of tomorrow — assembled at our own plant, not put together from someone else's parts.</p>
           <div class="feature-band__stats">
             <div><strong>0</strong><span>Tailpipe emissions</span></div>
@@ -277,12 +227,78 @@
     </div>
   </section>
 
+  <!-- 3 · CANDOR — flow. Real, honest running-cost planner. -->
+  <section class="sc-section cost-section" data-sc-act="flow" data-sc-drift="#FFFCF8">
+    <div class="sc-wrap cost-grid">
+      <div class="sc-stack" data-sc-in data-sc-stagger="70">
+        <p class="eyebrow">The daily shift</p>
+        <h2 class="sc-display sc-display--lg">Let your commute<br>keep more for <em>you.</em></h2>
+        <p class="sc-body">Electric mobility changes more than what you ride. It changes what you spend to get around every day. This is a simple, honest illustration, not a promise.</p>
+      </div>
+      <div class="cost-panel" data-sc-in style="transition-delay:120ms">
+        <div class="cost-panel__top"><span>Your everyday distance</span><output id="distanceValue" for="distance">30 km / day</output></div>
+        <input class="cost-slider" id="distance" type="range" min="10" max="100" step="5" value="30" aria-label="Daily distance in kilometres">
+        <div class="cost-scale"><span>10 km</span><span>100 km</span></div>
+        <div class="cost-rows">
+          <div class="cost-row"><span>Petrol commute</span><strong id="petrolCost">₹2,100</strong></div>
+          <div class="cost-row cost-row--electric"><span>Electric commute</span><strong id="electricCost">₹240</strong></div>
+        </div>
+        <div class="cost-total"><span>Potential monthly difference</span><strong id="savingCost">₹1,860</strong></div>
+        <p class="cost-note">Illustrative only: petrol at ₹2.33/km, electricity at ₹0.27/km, 30 commuting days. Actual results vary with local prices, vehicle efficiency and riding conditions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About — flow. Who SIROS is, before the proof-points act makes the case. -->
+  <section class="sc-section meet-siros" data-sc-act="flow" data-sc-drift="#FFFCF8">
+    <div class="sc-wrap meet-siros__grid">
+      <div class="meet-siros__copy" data-sc-in data-sc-stagger="70">
+        <p class="eyebrow">About SIROS</p>
+        <h2 class="sc-display sc-display--lg">Meet SIROS.<br><em>Electric mobility with a practical purpose.</em></h2>
+        <p class="sc-body">SIROS Vehicles Pvt. Ltd. is building an electric mobility brand focused on accessible EVs, dependable products and service that stays with you beyond the purchase.</p>
+        <p class="sc-body meet-siros__vision">Our vision is to build a nationally recognized brand through durable products, advanced technology, best-in-class service and relationships built on trust.</p>
+      </div>
+      <div class="meet-siros__stats" data-sc-in data-sc-stagger="70" style="transition-delay:120ms">
+        <div class="meet-stat">
+          <strong>10+</strong>
+          <span>Years <br>of trust</span>
+        </div>
+        <div class="meet-stat">
+          <strong>EV World</strong>
+          <span>Electric <br>mobility</span>
+        </div>
+        <div class="meet-stat">
+          <strong>Multiple Models</strong>
+          <span>For different <br>everyday needs</span>
+        </div>
+        <div class="meet-stat">
+          <strong>Service &amp; Support</strong>
+          <span>Built around <br>ownership</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · REASSURANCE — pin. The peak. Ground: generated plant still. Ledger fires here. -->
+  <section id="trust" data-sc-act="pin" data-sc-span="5.2" data-sc-drift="#181E22">
+    <div data-sc-stage class="trust-stage">
+      <img class="sc-stage__poster" src="assets/03-plant.webp" alt="Rows of finished SIROS scooters outside the Sirsa plant">
+      <div class="trust-scrim" aria-hidden="true"></div>
+      <div class="trust-argument">
+        <p data-sc-cue="0 0.32 0 0.16" data-ledger-claim="Own manufacturing plant in Sirsa, Haryana" data-ledger-id="plant">SIROS is not a new badge.<small>Every vehicle is built at our own plant in Sirsa, Haryana. Not put together from someone else's parts.</small></p>
+        <p data-sc-cue="0.3 0.6 0.16 0.16" data-ledger-claim="3-year warranty on lithium battery packs" data-ledger-id="warranty"><b>10 साल का भरोसा.</b> Ten years of building, and a battery warranty that isn't a sales trick.<small>3 years on lithium packs, 1 year on lead-acid, on every model.</small></p>
+        <p data-sc-cue="0.58 0.86 0.16 0.16" data-ledger-claim="Financed by Bajaj Finserv, insured by ICICI Lombard" data-ledger-id="finance">Financed by Bajaj Finserv. Insured by ICICI Lombard.<small>Real finance and insurance partners, arranged when you buy. Not a random referral.</small></p>
+        <p data-sc-cue="0.84 1 0.18 0">A brand you'll still find in ten years.<small>We want to be known for one thing: a vehicle that keeps running long after the warranty card is forgotten.</small></p>
+      </div>
+    </div>
+  </section>
+
   <!-- 5 · CLARITY — flow. Real EMI reference sheet. -->
   <section id="emi" class="sc-section emi-stage" data-sc-act="flow" data-sc-drift="#181E22">
     <div class="sc-wrap" style="padding-inline:0">
       <div class="sc-stack" data-sc-in data-sc-stagger="70" style="padding-inline:var(--sc-gutter); max-width:40rem;">
         <p class="eyebrow">Ownership, worked out</p>
-        <h2 class="sc-display sc-display--lg" style="color:var(--cream)">Pick a price.<br><em style="color:var(--sc-accent)">See the plan.</em></h2>
+        <h2 class="sc-display sc-display--lg" style="color:var(--cream)">Pick a price.<br><em style="color:var(--sc-badge)">See the plan.</em></h2>
         <p class="sc-body" style="color:color-mix(in oklab, var(--cream) 74%, transparent)">Real numbers from the SIROS financing sheet. Move the slider, pick a tenure, and see what you'd actually pay each month.</p>
       </div>
       <div class="emi-wrap" data-sc-in style="margin-top:clamp(2.4rem,4vw,3.6rem); transition-delay:120ms">
