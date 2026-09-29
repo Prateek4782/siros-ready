@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The full SIROS lineup: 11 electric vehicles</title>
+<meta name="description" content="Every SIROS electric scooter and utility vehicle, in one place. 11 models, all built at our own plant in Sirsa, Haryana.">
+<link rel="icon" href="assets/brand/mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="scrollcraft.css">
+<link rel="stylesheet" href="site.css">
+<style>
+  .models-hero { padding: clamp(7rem,12vw,10rem) var(--sc-gutter) clamp(2.5rem,5vw,4rem); max-width: 46rem; margin: 0 auto; text-align: center; }
+  .models-hero h1 { font-size: clamp(2.6rem,5.6vw,4.6rem); }
+  .models-page-section { padding: 0 var(--sc-gutter) clamp(5rem,8vw,8rem); max-width: var(--sc-maxw); margin: 0 auto; }
+  .models-page-section .range-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: clamp(0.9rem, 1.6vw, 1.3rem); overflow: visible; margin-inline: 0; padding: 0; }
+  @media (max-width: 980px) { .models-page-section .range-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .models-page-section .range-grid { grid-template-columns: 1fr; } }
+  .dealers-closing { background: var(--forest); color: var(--cream); text-align: center; padding: clamp(4rem,8vw,7rem) var(--sc-gutter); }
+  .dealers-closing p { font-family: var(--sc-font-display); font-size: clamp(1.6rem,3vw,2.2rem); margin: 0 0 1.4rem; }
+  .site-footer { background: var(--cream); border-top: 1px solid var(--line); padding: clamp(3rem,5vw,4.5rem) var(--sc-gutter) 2rem; }
+  .site-footer__bottom { max-width: var(--sc-maxw); margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.6rem; font-size: var(--sc-t-xs); color: var(--sc-ink-soft); padding-top: 1.4rem; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Primary">
+  <a class="nav__brand" href="index.html#top">
+    <img src="assets/brand/mark.png" alt="" width="44" height="44">
+    <span class="nav__wordmark">SIROS</span>
+  </a>
+  <div class="nav__links">
+    <a href="index.html#range">Vehicles</a>
+    <a href="index.html#trust">Why SIROS</a>
+    <a href="index.html#emi">Ownership</a>
+    <a href="dealers.html">Dealers</a>
+    <a href="index.html#faq">FAQ</a>
+  </div>
+  <div class="nav__actions">
+    <a class="btn btn--accent" href="mailto:info@sirosvehicles.com">Talk to SIROS</a>
+    <button class="nav__menu-btn" id="navMenuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <button class="mobile-menu__close" id="mobileMenuClose" aria-label="Close menu">✕</button>
+  <a href="index.html#range">Vehicles</a>
+  <a href="index.html#trust">Why SIROS</a>
+  <a href="index.html#emi">Ownership</a>
+  <a href="dealers.html">Dealers</a>
+  <a href="index.html#faq">FAQ</a>
+  <a href="mailto:info@sirosvehicles.com">Talk to SIROS</a>
+</div>
+
+<main>
+  <header class="models-hero">
+    <p class="eyebrow">The full lineup</p>
+    <h1 class="sc-display">11 models. <em>One plant.</em></h1>
+    <p class="sc-body" style="margin:1rem auto 0">Every SIROS electric vehicle, built at our own plant in Sirsa, Haryana. Tap any model for full specs.</p>
+  </header>
+
+  <section class="models-page-section">
+    <div class="range-grid" id="rangeGrid"></div>
+  </section>
+
+  <section class="dealers-closing">
+    <p>Not sure which one fits your route?</p>
+    <a class="btn btn--accent" href="mailto:info@sirosvehicles.com?subject=Which%20SIROS%20model">Ask SIROS directly <span aria-hidden="true">→</span></a>
+  </section>
+
+  <footer class="site-footer">
+    <div class="site-footer__bottom">
+      <span>© 2026 SIROS Vehicles Pvt. Ltd.</span>
+      <span>Sirsa, Haryana · Jhalawar, Rajasthan · Gurugram, Haryana</span>
+      <span>info@sirosvehicles.com</span>
+    </div>
+  </footer>
+</main>
+
+<script src="products-data.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

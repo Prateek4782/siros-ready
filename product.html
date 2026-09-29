@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SIROS vehicle</title>
+<link rel="icon" href="assets/brand/mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="scrollcraft.css">
+<link rel="stylesheet" href="site.css">
+<style>
+  .p-nav-back { display: inline-flex; align-items: center; gap: 0.5rem; font-size: var(--sc-t-sm); font-weight: 700; color: var(--sc-ink-soft); }
+  .p-hero { padding: clamp(6.5rem,10vw,9rem) var(--sc-gutter) 0; max-width: var(--sc-maxw); margin: 0 auto; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(2rem,4vw,4rem); align-items: center; }
+  .p-hero__media { aspect-ratio: 4/3.1; border-radius: var(--sc-r-lg); background: radial-gradient(120% 100% at 30% 20%, #fff, #F3F7F9 72%); display: grid; place-items: center; padding: 2rem; box-shadow: var(--sc-e2); }
+  .p-hero__media img { width: 100%; height: 100%; object-fit: contain; }
+  .p-hero__body h1 { font-size: clamp(2.6rem,5.5vw,4.4rem); }
+  .p-hero__body p.lede { font-size: var(--sc-t-lg); color: var(--sc-ink-soft); max-width: 36ch; margin-top: 1rem; }
+  .p-variant-note[hidden] { display: none; }
+  .p-variant-note { display: inline-block; margin-top: 1rem; padding: 0.4rem 0.8rem; border-radius: var(--sc-r-pill); background: var(--cream); border: 1px solid var(--line); font-size: var(--sc-t-xs); font-weight: 700; color: var(--accent-text); }
+  .p-cta-row { display: flex; gap: 1rem; margin-top: 1.8rem; flex-wrap: wrap; }
+  .p-specs { max-width: var(--sc-maxw); margin: clamp(3rem,6vw,5rem) auto 0; padding: 0 var(--sc-gutter); display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--sc-r-lg); overflow: hidden; }
+  .p-specs div { background: var(--sc-surface); padding: 1.4rem 1.3rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .p-specs span { font-size: var(--sc-t-xs); text-transform: uppercase; letter-spacing: var(--sc-track-wide); color: var(--sc-ink-soft); font-weight: 700; }
+  .p-specs strong { font-family: var(--sc-font-display); font-size: 1.2rem; }
+  .p-section { max-width: var(--sc-maxw); margin: 0 auto; padding: clamp(3.5rem,6vw,5.5rem) var(--sc-gutter); }
+  .p-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem,5vw,4.5rem); }
+  @media (max-width: 900px) { .p-hero { grid-template-columns: 1fr; } .p-specs { grid-template-columns: repeat(2,1fr); } .p-two-col { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Primary">
+  <a class="nav__brand" href="index.html#top">
+    <img src="assets/brand/mark.png" alt="" width="44" height="44">
+    <span class="nav__wordmark">SIROS</span>
+  </a>
+  <div class="nav__links">
+    <a href="index.html#range">Vehicles</a>
+    <a href="index.html#trust">Why SIROS</a>
+    <a href="index.html#emi">Ownership</a>
+    <a href="dealers.html">Dealers</a>
+    <a href="index.html#faq">FAQ</a>
+  </div>
+  <div class="nav__actions">
+    <a class="btn btn--accent" id="ctaTop" href="mailto:info@sirosvehicles.com">Talk to SIROS</a>
+    <button class="nav__menu-btn" id="navMenuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <button class="mobile-menu__close" id="mobileMenuClose" aria-label="Close menu">✕</button>
+  <a href="index.html#range">Vehicles</a>
+  <a href="index.html#trust">Why SIROS</a>
+  <a href="index.html#emi">Ownership</a>
+  <a href="dealers.html">Dealers</a>
+  <a href="index.html#faq">FAQ</a>
+  <a href="mailto:info@sirosvehicles.com">Talk to SIROS</a>
+</div>
+
+<main>
+  <p style="max-width:var(--sc-maxw); margin:5.5rem auto 0; padding:0 var(--sc-gutter);">
+    <a class="p-nav-back" href="index.html#range">← All vehicles</a>
+  </p>
+
+  <section class="p-hero">
+    <div class="p-hero__media"><img id="pImg" src="" alt=""></div>
+    <div class="p-hero__body">
+      <p class="eyebrow" id="pTag">Electric scooter</p>
+      <h1 class="sc-display" id="pName">SIROS</h1>
+      <p class="lede" id="pBlurb"></p>
+      <p id="pVariantNote" hidden class="p-variant-note"></p>
+      <div class="p-cta-row">
+        <a class="btn btn--accent" id="ctaMain" href="mailto:info@sirosvehicles.com">Ask about this model</a>
+        <a class="btn" href="index.html#emi">See EMI plans</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="p-specs">
+    <div><span>Tyre size</span><strong id="pTyre"></strong></div>
+    <div><span>Dimensions</span><strong id="pDim"></strong></div>
+    <div><span>Wheelbase</span><strong id="pWheelbase"></strong></div>
+    <div><span>Seat length</span><strong id="pSeat"></strong></div>
+  </div>
+
+  <section class="p-section p-two-col">
+    <div>
+      <p class="eyebrow">Standard, on every model</p>
+      <h2 class="sc-display" style="font-size:var(--sc-t-2xl)">What comes with it.</h2>
+      <div class="features-strip" id="featuresStrip" style="margin-top:1.2rem"></div>
+    </div>
+    <div>
+      <p class="eyebrow">Range by battery configuration</p>
+      <table class="band-table">
+        <thead><tr><th>Battery</th><th>Cells</th><th>Range per charge</th></tr></thead>
+        <tbody id="bandRows"></tbody>
+      </table>
+      <p class="sc-body" style="font-size:var(--sc-t-xs); margin-top:0.9rem">As stated in the SIROS vehicle catalog. Actual range varies with load and riding conditions. Payload 150 kg on every model.</p>
+    </div>
+  </section>
+
+  <section class="dealers-closing" style="background:var(--forest); color:var(--cream); text-align:center; padding:clamp(3.5rem,7vw,6rem) var(--sc-gutter);">
+    <p style="font-family:var(--sc-font-display); font-size:clamp(1.5rem,3vw,2.2rem); margin:0 0 1.3rem;">Want the current price for <span id="pNameInline">this model</span>?</p>
+    <a class="btn btn--accent" id="ctaBottom" href="mailto:info@sirosvehicles.com">Talk to SIROS <span aria-hidden="true">→</span></a>
+  </section>
+
+  <footer class="site-footer" style="background:var(--cream); border-top:1px solid var(--line); padding:clamp(2.5rem,5vw,4rem) var(--sc-gutter) 2rem;">
+    <div style="max-width:var(--sc-maxw); margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.6rem; font-size:var(--sc-t-xs); color:var(--sc-ink-soft);">
+      <span>© 2026 SIROS Vehicles Pvt. Ltd.</span>
+      <span>Sirsa, Haryana · Jhalawar, Rajasthan · Gurugram, Haryana</span>
+      <span>info@sirosvehicles.com</span>
+    </div>
+  </footer>
+</main>
+
+<script src="products-data.js"></script>
+<script src="site.js"></script>
+<script>
+(function () {
+  const slug = new URLSearchParams(location.search).get('model');
+  const model = SIROS_MODELS.find((m) => m.slug === slug) || SIROS_MODELS[0];
+  document.title = `SIROS ${model.name}: electric, for the everyday`;
+  document.querySelector('#pTag').textContent = model.tag;
+  document.querySelector('#pName').textContent = model.name;
+  document.querySelector('#pBlurb').textContent = model.blurb || '';
+  document.querySelector('#pImg').src = `assets/products/${model.photo}.webp`;
+  document.querySelector('#pImg').alt = `SIROS ${model.name}`;
+  document.querySelector('#pTyre').textContent = model.tyre + ' in';
+  document.querySelector('#pDim').textContent = model.dim;
+  document.querySelector('#pWheelbase').textContent = model.wheelbase;
+  document.querySelector('#pSeat').textContent = model.seat;
+  document.querySelector('#pNameInline').textContent = model.name;
+  if (model.variantOf) {
+    const note = document.querySelector('#pVariantNote');
+    note.hidden = false;
+    note.textContent = `Same body as the ${model.variantOf}, in a higher battery configuration`;
+  }
+  const subject = encodeURIComponent(`${model.name} enquiry`);
+  const href = `mailto:info@sirosvehicles.com?subject=${subject}`;
+  ['ctaTop', 'ctaMain', 'ctaBottom'].forEach((id) => { const el = document.getElementById(id); if (el) el.href = href; });
+
+  const bands = document.querySelector('#bandRows');
+  if (bands && typeof SIROS_BATTERY_BANDS !== 'undefined') {
+    bands.innerHTML = SIROS_BATTERY_BANDS.map((b) => `<tr><td>${b.volt}</td><td>${b.cells}</td><td>${b.range}</td></tr>`).join('');
+  }
+  const feat = document.querySelector('#featuresStrip');
+  if (feat && typeof SIROS_STANDARD_FEATURES !== 'undefined') {
+    feat.innerHTML = SIROS_STANDARD_FEATURES.map((f) => `<span class="features-chip">${f}</span>`).join('');
+  }
+})();
+</script>
+</body>
+</html>
