@@ -286,16 +286,27 @@ em, i.brandmark-italic { font-style: italic; }
   transition: box-shadow 260ms var(--sc-ease-out), transform 260ms var(--sc-ease-out);
 }
 .range-grid__item:hover { box-shadow: var(--sc-e3); transform: translateY(-5px); }
+/* Default: a full-bleed environmental render (its own dark backdrop baked
+   in), so it covers the frame edge to edge — the bottom fade then blends
+   photo into card body with no visible seam. */
 .range-grid__item .thumb {
-  position: relative; aspect-ratio: 1/0.92; display: grid; place-items: center; padding: 1.5rem 1.2rem 0;
-  background: radial-gradient(120% 100% at 35% 20%, #fff 0%, #F3F7F9 68%, #E9EDEF 100%);
+  position: relative; aspect-ratio: 1/0.92; display: block; overflow: hidden;
+  background: var(--sc-ink);
 }
 .range-grid__item .thumb::after {
   content: ""; position: absolute; inset: auto 0 0 0; height: 42%;
   background: linear-gradient(to bottom, transparent, var(--sc-ink));
   pointer-events: none;
 }
-.range-grid__item .thumb img { width: 92%; height: 92%; object-fit: contain; filter: drop-shadow(0 16px 20px rgba(20,24,29,.18)); }
+.range-grid__item .thumb img { width: 100%; height: 100%; object-fit: cover; }
+/* Loder's is a real isolated catalog cutout on a plain background, not a
+   full scene — cover would crop the vehicle itself, so it keeps the old
+   contain-in-a-light-well treatment instead. */
+.range-grid__item .thumb--cutout {
+  display: grid; place-items: center; padding: 1.5rem 1.2rem 0;
+  background: radial-gradient(120% 100% at 35% 20%, #fff 0%, #F3F7F9 68%, #E9EDEF 100%);
+}
+.range-grid__item .thumb--cutout img { width: 92%; height: 92%; object-fit: contain; filter: drop-shadow(0 16px 20px rgba(20,24,29,.18)); }
 .range-grid__item .meta { padding: 0 1.25rem 1.25rem; display: flex; flex-direction: column; flex: 1; }
 .range-grid__item .meta__brand { display: flex; align-items: center; gap: 0.4rem; margin-top: -0.2rem; }
 .range-grid__item .meta__mark { width: 16px; height: 16px; object-fit: contain; }

@@ -138,7 +138,7 @@ const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
     const list = curated ? SIROS_MODELS.filter((m) => curated.includes(m.slug)) : SIROS_MODELS;
     const cards = list.map((m) => `
       <article class="range-grid__item">
-        <a class="thumb" href="product.html?model=${m.slug}" aria-label="View ${m.name}">
+        <a class="thumb${m.cutout ? ' thumb--cutout' : ''}" href="product.html?model=${m.slug}" aria-label="View ${m.name}">
           <img src="assets/products/${m.photo}.webp" alt="SIROS ${m.name}" loading="lazy">
         </a>
         <div class="meta">

@@ -9,25 +9,25 @@
  * invented here. Real reference pricing lives in the EMI table (emi-data.js).
  *
  * Photography: the catalog's own turntable photos are cropped tight and
- * inconsistently framed across pages, so the card imagery uses two clean,
- * consistently-lit studio stills (one light colourway for the lighter-bodied
- * 12x10 family, one dark colourway for the 12x12 family) rather than the
- * catalog crops. Loder is a genuinely different vehicle shape (a utility
- * scooter with a cargo basket), so it keeps its real catalog photo rather
- * than being shown as a generic scooter.
+ * inconsistently framed across pages, so the card imagery uses generated
+ * studio stills instead of the catalog crops — one distinct render per body
+ * (Pro variants reuse their base model's render, same as the spec block they
+ * share). Loder is a genuinely different vehicle shape (a utility scooter
+ * with a cargo basket), so it keeps its own real catalog photo rather than
+ * being shown as a generic scooter.
  */
 const SIROS_MODELS = [
-  { slug: 'nexa',     name: 'Nexa',     tag: 'Electric scooter', photo: 'gen-light', tyre: '12×10', dim: '1860 × 720 × 1130 mm', wheelbase: '1240 mm', seat: '600 mm', blurb: 'The everyday commuter. Light, simple, easy to ride every day.' },
-  { slug: 'zl',       name: 'ZL',       tag: 'Electric scooter', photo: 'gen-light', tyre: '12×10', dim: '1860 × 720 × 1130 mm', wheelbase: '1240 mm', seat: '600 mm', blurb: 'A composed ride for the trips that make up your day.' },
-  { slug: 'zl-pro',   name: 'ZL Pro',   tag: 'Electric scooter', photo: 'gen-light', tyre: '12×10', dim: '1860 × 720 × 1130 mm', wheelbase: '1240 mm', seat: '600 mm', blurb: 'The ZL body, tuned for a higher battery configuration.', variantOf: 'ZL' },
-  { slug: 'ac1',      name: 'AC1',      tag: 'Electric scooter', photo: 'gen-dark', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'Simple, electric, ready — an accessible way to start.' },
-  { slug: 'iq',       name: 'IQ',       tag: 'Electric scooter', photo: 'gen-dark', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'A sharper design with the same dependable basics.' },
-  { slug: 'iq-pro',   name: 'IQ Pro',   tag: 'Electric scooter', photo: 'gen-dark', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'The IQ body, tuned for a higher battery configuration.', variantOf: 'IQ' },
-  { slug: 'e4',       name: 'E4',       tag: 'Electric scooter', photo: 'gen-dark', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'Bolder styling, built on the same trusted platform.' },
-  { slug: 'cruz',     name: 'Cruz',     tag: 'Electric scooter', photo: 'gen-light', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'A smooth, composed ride for longer daily distances.' },
-  { slug: 'cruz-pro', name: 'Cruz Pro', tag: 'Electric scooter', photo: 'gen-light', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'The Cruz body, tuned for a higher battery configuration.', variantOf: 'Cruz' },
-  { slug: 'olpro',    name: 'OL Pro',   tag: 'Electric scooter', photo: 'gen-dark', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'Our most powerful scooter yet, in a striking body.' },
-  { slug: 'loder',    name: 'Loder',    tag: 'Electric utility vehicle', photo: 'loder', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'Built to carry the day — goods, tools, deliveries.' },
+  { slug: 'nexa',     name: 'Nexa',     tag: 'Electric scooter', photo: 'nexa-render', tyre: '12×10', dim: '1860 × 720 × 1130 mm', wheelbase: '1240 mm', seat: '600 mm', blurb: 'The everyday commuter. Light, simple, easy to ride every day.' },
+  { slug: 'zl',       name: 'ZL',       tag: 'Electric scooter', photo: 'zl-render', tyre: '12×10', dim: '1860 × 720 × 1130 mm', wheelbase: '1240 mm', seat: '600 mm', blurb: 'A composed ride for the trips that make up your day.' },
+  { slug: 'zl-pro',   name: 'ZL Pro',   tag: 'Electric scooter', photo: 'zl-render', tyre: '12×10', dim: '1860 × 720 × 1130 mm', wheelbase: '1240 mm', seat: '600 mm', blurb: 'The ZL body, tuned for a higher battery configuration.', variantOf: 'ZL' },
+  { slug: 'ac1',      name: 'AC1',      tag: 'Electric scooter', photo: 'ac1-render', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'Simple, electric, ready — an accessible way to start.' },
+  { slug: 'iq',       name: 'IQ',       tag: 'Electric scooter', photo: 'iq-render', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'A sharper design with the same dependable basics.' },
+  { slug: 'iq-pro',   name: 'IQ Pro',   tag: 'Electric scooter', photo: 'iq-render', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'The IQ body, tuned for a higher battery configuration.', variantOf: 'IQ' },
+  { slug: 'e4',       name: 'E4',       tag: 'Electric scooter', photo: 'e4-render', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'Bolder styling, built on the same trusted platform.' },
+  { slug: 'cruz',     name: 'Cruz',     tag: 'Electric scooter', photo: 'cruz-render', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'A smooth, composed ride for longer daily distances.' },
+  { slug: 'cruz-pro', name: 'Cruz Pro', tag: 'Electric scooter', photo: 'cruz-render', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'The Cruz body, tuned for a higher battery configuration.', variantOf: 'Cruz' },
+  { slug: 'olpro',    name: 'OL Pro',   tag: 'Electric scooter', photo: 'olpro-render', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'Our most powerful scooter yet, in a striking body.' },
+  { slug: 'loder',    name: 'Loder',    tag: 'Electric utility vehicle', photo: 'loder', tyre: '12×12', dim: '1870 × 720 × 1130 mm', wheelbase: '1280 mm', seat: '710 mm', blurb: 'Built to carry the day — goods, tools, deliveries.', cutout: true },
 ];
 
 /* Battery / range bands — identical structure across the whole range, per the
