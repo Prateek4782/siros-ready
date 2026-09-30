@@ -155,7 +155,6 @@ const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
     const viewAll = curated ? `
       <a class="range-grid__item range-grid__item--viewall" href="models.html">
         <div class="range-grid__item--viewall__inner">
-          <span class="range-grid__item--viewall__count">${SIROS_MODELS.length}</span>
           <h4>View all models</h4>
           <span class="arrow"><span>See the full range</span><span aria-hidden="true">→</span></span>
         </div>
@@ -176,18 +175,14 @@ const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
 /* --------------------------------------------------------------- dealers -- */
 (function dealerLocator() {
   const searchInput = document.querySelector('#dealerSearch');
-  const stateSelect = document.querySelector('#dealerState');
   const resultsEl = document.querySelector('#dealerResults');
   const metaEl = document.querySelector('#dealerMeta');
   if (!searchInput || typeof SIROS_DEALERS === 'undefined') return;
 
   const STATE_NAMES = { rj: 'Rajasthan', mp: 'Madhya Pradesh' };
-  const STATE_ORDER = ['rj', 'mp'];
-  const mobileMql = window.matchMedia('(max-width: 760px)');
 
   function matches(d, q) {
-    if (!q) return true;
-    return [d.firm, d.contact, d.town, d.address, d.pin].filter(Boolean).join(' ').toLowerCase().includes(q);
+    return !!(d.town && d.town.toLowerCase().includes(q));
   }
   function card(d) {
     const title = d.town || d.firm || 'SIROS dealer';
@@ -200,37 +195,21 @@ const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
       <a href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">Get directions →</a>
     </div>`;
   }
-  function group(code, list) {
-    return `<div class="dealer-group"><div class="dealer-group__head"><h3>${STATE_NAMES[code] || code}</h3><span>${list.length} dealer${list.length === 1 ? '' : 's'}</span></div>
-      <div class="dealer-results">${list.map(card).join('')}</div></div>`;
-  }
   function render() {
     const q = searchInput.value.trim().toLowerCase();
-    const state = stateSelect.value;
-    const browsingAll = !q && state === 'all';
-    if (browsingAll && mobileMql.matches) {
-      metaEl.textContent = 'Dealers across Rajasthan & Madhya Pradesh';
-      resultsEl.innerHTML = `<div class="dealer-empty"><strong>Search to find your nearest dealer</strong><br>Type a town, firm or dealer name, or choose a state.</div>`;
+    metaEl.textContent = '';
+    if (!q) {
+      resultsEl.innerHTML = `<div class="dealer-empty"><strong>Search to find your nearest dealer</strong><br>Type your city.</div>`;
       return;
     }
-    const matched = SIROS_DEALERS.filter((d) => (state === 'all' || d.state === state) && matches(d, q));
+    const matched = SIROS_DEALERS.filter((d) => matches(d, q));
     if (!matched.length) {
-      metaEl.textContent = 'No matches';
-      resultsEl.innerHTML = `<div class="dealer-empty"><strong>No dealers found</strong><br>Try a different spelling, or search by state.</div>`;
+      resultsEl.innerHTML = `<div class="dealer-empty"><strong>No dealers found</strong><br>Try a different spelling.</div>`;
       return;
     }
-    metaEl.textContent = q || state !== 'all' ? `${matched.length} dealer${matched.length === 1 ? '' : 's'} found`
-      : `${matched.length} dealers across ${STATE_ORDER.filter((s) => matched.some((d) => d.state === s)).map((s) => STATE_NAMES[s]).join(' & ')}`;
-    if (browsingAll) {
-      resultsEl.innerHTML = STATE_ORDER.map((c) => matched.filter((d) => d.state === c)).filter((g) => g.length).map((g) => group(g[0].state, g)).join('');
-    } else {
-      resultsEl.innerHTML = `<div class="dealer-results">${matched.map(card).join('')}</div>`;
-    }
+    resultsEl.innerHTML = `<div class="dealer-results">${matched.map(card).join('')}</div>`;
   }
   searchInput.addEventListener('input', render);
-  stateSelect.addEventListener('change', render);
-  if (typeof mobileMql.addEventListener === 'function') mobileMql.addEventListener('change', render);
-  else if (typeof mobileMql.addListener === 'function') mobileMql.addListener(render);
   render();
 })();
 
