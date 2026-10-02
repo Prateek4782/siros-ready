@@ -28,7 +28,18 @@
   .benefit-card__icon svg { width: 20px; height: 20px; }
   .benefit-card h3 { margin: 0 0 0.4rem; font-family: var(--sc-font-display); font-size: 1.05rem; font-weight: 700; }
   .benefit-card p { margin: 0; font-size: var(--sc-t-sm); color: var(--sc-ink-soft); line-height: 1.55; }
-  @media (max-width: 900px) { .dealer-benefits__grid { grid-template-columns: repeat(2, 1fr); } }
+  .benefits-head { text-align: center; max-width: 40rem; margin: 0 auto clamp(1.6rem, 3vw, 2.4rem); }
+  .benefits-head h2 { margin-top: 0.5rem; line-height: 1.3; }
+  .benefits-head h2 em { color: var(--sc-badge); font-style: normal; }
+  .benefit-stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 1px; background: color-mix(in oklab, var(--cream) 14%, transparent); border-radius: var(--sc-r-lg); overflow: hidden; margin-bottom: clamp(0.9rem, 1.6vw, 1.3rem); box-shadow: var(--sc-e2); }
+  .benefit-stat { background: var(--sc-ink); color: var(--cream); padding: clamp(1.3rem, 2.4vw, 1.8rem) 1.2rem; display: flex; flex-direction: column; gap: 0.25rem; text-align: center; }
+  .benefit-stat strong { font-family: var(--sc-font-display); font-weight: 800; font-size: clamp(1.7rem, 3.2vw, 2.4rem); line-height: 1.1; color: var(--sc-badge); }
+  .benefit-stat span { font-weight: 700; font-size: var(--sc-t-sm); }
+  .benefit-stat small { font-size: var(--sc-t-xs); color: color-mix(in oklab, var(--cream) 62%, transparent); }
+  .benefit-card h3 { font-size: 1.12rem; }
+  .benefit-card--feature { background: color-mix(in oklab, var(--sc-badge) 7%, var(--sc-surface)); border-color: color-mix(in oklab, var(--sc-badge) 30%, transparent); }
+  .benefit-card--feature .benefit-card__icon { background: var(--sc-badge); color: #fff; }
+  @media (max-width: 900px) { .dealer-benefits__grid { grid-template-columns: repeat(2, 1fr); } .benefit-stats { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 560px) { .dealer-benefits__grid { grid-template-columns: 1fr; } }
 
   .dealer-actions { padding: 0 var(--sc-gutter) clamp(4.5rem,8vw,7rem); max-width: 34rem; margin: 0 auto; text-align: center; }
@@ -69,6 +80,7 @@
   <a href="dealers.html">Dealers</a>
   <a href="dealer.html">Become a Dealer</a>
   <a href="index.html#faq">FAQ</a>
+  <a href="assets/brochure/SIROS-catalog.pdf" download="SIROS-Vehicle-Catalog.pdf">Download brochure</a>
   <a href="mailto:info@sirosvehicles.com">Talk to SIROS</a>
 </div>
 
@@ -76,7 +88,7 @@
   <header class="dealer-hero">
     <p class="eyebrow" style="color:var(--accent-text)">For businesses</p>
     <h1 class="dealer-hero__hi">डीलर बनें.<br><em>Become a SIROS dealer.</em></h1>
-    <p class="sc-body">Bring electric mobility to your city. Real margins, full training, and genuine demand — not just in the metros.</p>
+    <p class="sc-body">Bring electric mobility to your city. Zero security, full company support, and customer leads straight from our website.</p>
   </header>
 
   <figure class="dealer-showroom">
@@ -84,37 +96,49 @@
     <figcaption>Stock the full SIROS range, in every colour.</figcaption>
   </figure>
 
-  <section class="dealer-benefits">
+  <section class="dealer-benefits" aria-labelledby="benefitsTitle">
+    <div class="benefits-head">
+      <p class="eyebrow" style="color:var(--accent-text)">What you get</p>
+      <h2 id="benefitsTitle" class="sc-display sc-display--md">सिरोस की डीलरशिप लेने पर <em>आपको मिलता है</em></h2>
+    </div>
+
+    <div class="benefit-stats">
+      <div class="benefit-stat"><strong>₹0</strong><span>ज़ीरो सिक्योरिटी</span><small>Zero security deposit</small></div>
+      <div class="benefit-stat"><strong>3 साल</strong><span>की वारंटी</span><small>3-year warranty</small></div>
+      <div class="benefit-stat"><strong>24 घंटे</strong><span>में वारंटी रिप्लेसमेंट</span><small>Warranty replacement in 24 hours</small></div>
+      <div class="benefit-stat"><strong>120 km</strong><span>प्रति चार्ज</span><small>Up to 120 km per charge</small></div>
+    </div>
+
     <div class="dealer-benefits__grid">
       <div class="benefit-card">
-        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5.5c0-1.9-2.2-3.5-5-3.5S7 3.6 7 5.5 9.2 9 12 9s5 1.6 5 3.5-2.2 3.5-5 3.5-5-1.6-5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
-        <h3>Real margins</h3>
-        <p>Straightforward dealer pricing on every model, confirmed when you apply — not buried in fine print.</p>
+        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="6.5" cy="17" r="2.6" stroke="currentColor" stroke-width="1.6"/><circle cx="17.5" cy="17" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M6.5 17h11l1.6-10M17 6h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <h3>आकर्षक मॉडल, आकर्षक रंग</h3>
+        <p>The full SIROS range to stock, every model in attractive colours.</p>
       </div>
       <div class="benefit-card">
-        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19.5V6a2 2 0 0 1 2-2h9l5 5v10.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 13h8M8 17h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
-        <h3>Full training</h3>
-        <p>Product, service and sales onboarding before you open your doors, plus ongoing support after.</p>
+        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M14.5 6.5a4 4 0 0 0-5.3 5.3L4 17l3 3 5.2-5.2a4 4 0 0 0 5.3-5.3l-2.4 2.4-2.6-.6-.6-2.6 2.6-2.2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
+        <h3>स्पेयर पार्ट्स का सपोर्ट</h3>
+        <p>Spare parts support from the company, so your service bay keeps moving.</p>
       </div>
-      <div class="benefit-card">
-        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <h3>Fast setup</h3>
-        <p>A lean showroom footprint and straightforward stocking, built to get you selling quickly.</p>
-      </div>
-      <div class="benefit-card">
-        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12s3.5-7 9-7 9 7 9 7-3.5 7-9 7-9-7-9-7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.6" stroke="currentColor" stroke-width="1.6"/></svg></span>
-        <h3>Real EV demand</h3>
-        <p>Electric mobility is moving past the metros — SIROS is built for the routes and roads your customers actually ride.</p>
-      </div>
-      <div class="benefit-card">
-        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 9h18M8 14h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
-        <h3>Financing support</h3>
-        <p>Partner lenders already in place — Bajaj Finserv and ICICI Lombard — so your customers can say yes on the spot.</p>
-      </div>
-      <div class="benefit-card">
+      <div class="benefit-card benefit-card--feature">
         <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.1 7-11.5A7 7 0 1 0 5 9.5C5 14.9 12 21 12 21z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="2.4" stroke="currentColor" stroke-width="1.6"/></svg></span>
-        <h3>A dedicated region</h3>
-        <p>One point of contact at SIROS who knows your market, not a support queue.</p>
+        <h3>वेबसाइट से कस्टमर लीड</h3>
+        <p>Your location is listed on the official SIROS website, so nearby buyers find you. All models and rates are on the site too, so customers arrive already informed.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5.5" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 9.5h18M6.5 14h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+        <h3>फाइनेंस सुविधा</h3>
+        <p>Finance available on every model, so your customers can buy on easy terms.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6l7-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <h3>सभी मॉडल का इंश्योरेंस</h3>
+        <p>Insurance on every model through Shriram Insurance.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 11v2a1 1 0 0 0 1 1h2l5 4V6L7 10H5a1 1 0 0 0-1 1z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+        <h3>सोशल मीडिया में पूरा सपोर्ट</h3>
+        <p>The company fully supports you in running your social media handles.</p>
       </div>
     </div>
   </section>
@@ -123,6 +147,7 @@
     <p class="sc-body">Have a showroom or workshop already? Tell us about it — we reply to every application.</p>
     <div class="dealer-actions__row">
       <a class="btn" href="models.html">View products</a>
+      <a class="btn btn--brochure" href="assets/brochure/SIROS-catalog.pdf" download="SIROS-Vehicle-Catalog.pdf"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19.5h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Brochure</a>
       <button class="btn btn--accent" type="button" id="dealerAppOpen">Apply as dealer</button>
     </div>
   </section>

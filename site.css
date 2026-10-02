@@ -263,19 +263,52 @@ em, i.brandmark-italic { font-style: italic; }
    between the last card and "Standard on every model", not a pause. */
 #range + .sc-section { padding-top: clamp(1.5rem, 3vw, 2.5rem); }
 
-/* A pinned pan act: the page holds still and the reader's own scroll drags
-   the shelf sideways, card by card, instead of asking for a swipe/drag on
-   top of the scroll they are already doing. `data-sc-pan` on .range-grid is
-   read by the engine, which transforms the rail by -(scrollWidth - vw) * p;
-   .sc-stage (engine CSS) clips whatever travels past either edge. Reduced
-   motion degrades this back to an ordinary horizontal scroll region
-   automatically (engine CSS), so no separate fallback is needed here. */
-.range-stage {
-  background: var(--cream); display: flex; flex-direction: column;
-  justify-content: center; gap: clamp(1.4rem, 3vw, 2.2rem);
+/* --------------------------------------------------------------- rails -- */
+/* Sideways shelves the visitor drives directly: touch swipe, trackpad,
+   mouse drag, arrow buttons or the keyboard. The page itself always scrolls
+   vertically as normal; nothing is pinned or scroll-jacked. site.js
+   (rails) keeps the buttons, progress bar and edge fades in sync. */
+.range-section { padding-top: clamp(3.5rem, 7vw, 6rem); padding-bottom: clamp(2rem, 4vw, 3rem); }
+.rail-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.2rem 2rem; flex-wrap: wrap; margin-bottom: clamp(1.2rem, 2.6vw, 2rem); }
+.rail-head__copy { max-width: 38rem; }
+.rail-head .section-heading { text-align: left; margin: 0.35rem 0 0; font-size: clamp(1.9rem, 3.4vw, 2.6rem); line-height: 1.15; }
+.rail-head__copy .sc-body { margin-top: 0.6rem; }
+.rail-head__actions { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+.rail-nav { display: flex; gap: 0.5rem; }
+.rail-btn {
+  width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  border: 1px solid var(--line); background: var(--sc-surface); color: var(--sc-ink); box-shadow: var(--sc-e1);
+  transition: background 180ms, color 180ms, opacity 180ms, transform 160ms var(--sc-ease-out);
 }
-.range-stage__head { max-width: 34rem; margin-inline: auto; text-align: center; padding-inline: var(--sc-gutter); }
-.range-stage__head .sc-body { margin-top: 0.6rem; }
+.rail-btn svg { width: 18px; height: 18px; }
+.rail-btn:hover:not(:disabled) { background: var(--sc-ink); color: var(--cream); }
+.rail-btn:active:not(:disabled) { transform: scale(0.94); }
+.rail-btn:disabled { opacity: 0.35; cursor: default; box-shadow: none; }
+.rail-btn:focus-visible, [data-rail-track]:focus-visible { outline: 2px solid var(--sc-ink); outline-offset: 3px; }
+/* Touch screens swipe; the arrows are for mouse and trackpad users. */
+@media (hover: none) { .rail-nav { display: none; } }
+
+.btn--brochure { display: inline-flex; align-items: center; gap: 0.5rem; }
+.btn--brochure svg { width: 18px; height: 18px; flex: none; }
+.btn--brochure small { font-weight: 600; opacity: 0.6; font-size: 0.75em; }
+
+.rail { position: relative; }
+[data-rail-track] { overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: var(--sc-gutter); scrollbar-width: none; }
+[data-rail-track]::-webkit-scrollbar { display: none; }
+@media (hover: hover) and (pointer: fine) { [data-rail-track] { cursor: grab; } }
+[data-rail-track].is-dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+[data-rail-track].is-dragging a, [data-rail-track].is-dragging img { pointer-events: none; }
+[data-rail-track] img { -webkit-user-drag: none; }
+.rail .range-grid { padding-block: 0.5rem 1.5rem; }
+.rail .range-grid__item { scroll-snap-align: start; }
+/* Edge fades hint that the shelf continues; each hides at its own end. */
+.rail::before, .rail::after {
+  content: ""; position: absolute; top: 0; bottom: 1.5rem; width: clamp(1.25rem, 4vw, 3.5rem);
+  pointer-events: none; z-index: 2; transition: opacity 220ms;
+}
+.rail::before { left: 0; background: linear-gradient(to right, var(--sc-canvas), transparent); }
+.rail::after { right: 0; background: linear-gradient(to left, var(--sc-canvas), transparent); }
+[data-rail].at-start .rail::before, [data-rail].at-end .rail::after { opacity: 0; }
 
 /* Card shape follows Ola Electric's own product card: a dark tile with the
    product sitting in a light studio frame that fades into the card body at
@@ -350,37 +383,23 @@ em, i.brandmark-italic { font-style: italic; }
 .range-grid__item--viewall .arrow span:last-child { transition: transform 200ms var(--sc-ease-out); }
 .range-grid__item--viewall:hover .arrow span:last-child { transform: translateX(3px); }
 
-/* Driven straight off the engine's own --sc-p for the act, no JS of ours
-   needed: the thumb is a fixed fraction of the rail width and slides across
-   the remaining travel in step with the pinned scroll progress. */
-.rail-progress { height: 2px; width: 100%; margin: 1.4rem auto 0; max-width: 12rem; border-radius: 2px; background: var(--line); overflow: hidden; }
-.rail-progress span { display: block; height: 100%; width: 30%; border-radius: 2px; background: var(--sc-ink); transform: translateX(calc(var(--sc-p, 0) * 233.33%)); }
-@media (max-width: 640px) { .range-stage .range-grid__item { flex: 0 0 72vw; max-width: 17rem; } }
+/* Live position of the shelf: thumb width = visible share, offset = scroll
+   position. Both set by site.js (rails) as --rail-thumb / --rail-x. */
+.rail-progress { height: 3px; width: calc(100% - 2 * var(--sc-gutter)); max-width: 16rem; margin: 0.4rem auto 0; border-radius: 3px; background: var(--line); overflow: hidden; }
+.rail-progress span { display: block; height: 100%; width: var(--rail-thumb, 30%); border-radius: 3px; background: var(--sc-ink); transform: translateX(var(--rail-x, 0%)); }
+@media (max-width: 640px) { .rail .range-grid__item { flex: 0 0 78vw; max-width: 18rem; } }
 
-/* The pinned stage is exactly one viewport tall (overflow: clip), so on the
-   homepage rail the photo's height is budgeted from the viewport instead of
-   the card width: whatever is left after the nav, heading, card text and
-   progress bar goes to the photo, capped so it never grows absurdly tall.
-   The card body is ~9.5rem, so the photo stays around two thirds of the
-   card on any laptop-sized window rather than being squashed. */
-.range-stage .range-grid__item .thumb { aspect-ratio: auto; height: clamp(13rem, calc(100svh - 22.5rem), 25rem); }
-@media (max-height: 1100px) {
-  /* padding-top reserves the fixed nav so the heading never sits under it */
-  .range-stage { gap: clamp(0.8rem, 1.6vw, 1.2rem); padding-top: 6.25rem; padding-bottom: 0.5rem; }
-  .range-stage__head .sc-body, .range-stage__head .eyebrow { display: none; }
-  .range-stage__head .section-heading { margin: 0; }
-  .range-stage .rail-progress { margin-top: 0.6rem; }
-}
-@media (max-height: 860px) {
-  .range-stage__head h2 { font-size: clamp(1.5rem, 3.4vw, 2rem); }
-  .range-stage__head { padding-top: 0; }
-}
+/* End tile: the brochure, plus a way into the full comparison page. */
+.range-grid__item--end { background: var(--sc-ink); color: var(--cream); }
+.range-grid__item--end .range-grid__item--viewall__inner { gap: 0.9rem; }
+.range-grid__item--end h4 { color: var(--cream); font-family: var(--sc-font-display); font-size: 1.35rem; margin: 0; }
+.range-grid__item--end p { margin: 0; font-size: var(--sc-t-sm); color: color-mix(in oklab, var(--cream) 70%, transparent); line-height: 1.5; }
+.range-grid__item--end .card-btn { margin-top: 0.3rem; }
 
 /* --------------------------------------------------------- colour gallery -- */
 /* SIROS's own colour-lineup photos, one per model, on a native swipe rail
    (scroll-snap, no pin) so it never fights the pinned acts around it. */
 .colour-gallery { padding-bottom: clamp(2.5rem, 5vw, 4rem); }
-.colour-gallery__head { margin-bottom: clamp(1.4rem, 3vw, 2.2rem); text-align: center; }
 .colour-gallery__rail {
   display: flex; gap: clamp(0.9rem, 1.6vw, 1.3rem); overflow-x: auto; scroll-snap-type: x mandatory;
   padding: 0 var(--sc-gutter) 1rem; scroll-padding-inline: var(--sc-gutter); scrollbar-width: thin;
@@ -773,18 +792,9 @@ em, i.brandmark-italic { font-style: italic; }
   .feature-duo__panel .feature-duo__media { aspect-ratio: 16/9; }
 
   /* ---- range shelf on phone ------------------------------------------- */
-  /* Same pinned pan rail as desktop, the engine drags it under the same
-     scroll. The stage is a fixed 100svh here, so a card this detailed
-     (brand row, name, blurb, price, two buttons) has to be budgeted against
-     that height minus the fixed bottom action bar, or its own "Ask price"
-     button ends up sitting underneath the bar. The intro paragraph gives up
-     its room first; the card's own paddings tighten second. */
-  .range-stage { padding-bottom: calc(4.6rem + env(safe-area-inset-bottom)); gap: 1rem; }
-  .range-stage__head .sc-body { display: none; }
-  .range-stage .range-grid { gap: 0.75rem; }
-  .range-stage .range-grid__item .thumb { height: clamp(12rem, calc(100svh - 26rem), 24rem); }
-  .range-stage .range-grid__item .meta { padding-bottom: 1rem; }
-  .rail-progress { max-width: 8rem; }
+  .rail .range-grid { gap: 0.75rem; }
+  .rail-head__actions { width: 100%; }
+  .btn--brochure { width: 100%; justify-content: center; }
 
   /* ---- footer as accordion ------------------------------------------ */
   .site-footer__top { grid-template-columns: 1fr; gap: 0; padding-bottom: 1.6rem; }

@@ -136,16 +136,14 @@ const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
   if (grid) {
     const curated = grid.dataset.curated ? grid.dataset.curated.split(',') : null;
     const list = curated ? curated.map((s) => SIROS_MODELS.find((m) => m.slug === s)).filter(Boolean) : SIROS_MODELS;
-    // The homepage rail is pinned and panned sideways with a transform, so
-    // native lazy-loading only fires as each card slides in — the photo pops
-    // in late. The curated rail is small; load it up front.
-    const loading = curated ? 'eager' : 'lazy';
-    const cards = list.map((m) => {
+    const cards = list.map((m, i) => {
       const from = m.prices ? Math.min(...m.prices) : null;
+      // the first few are on screen straight away; the rest load as they near the edge
+      const loading = i < 4 ? 'eager' : 'lazy';
       return `
       <article class="range-grid__item">
         <a class="thumb${m.cutout ? ' thumb--cutout' : ''}" href="product.html?model=${m.slug}" aria-label="View ${m.name}">
-          <img src="assets/products/${m.photo}-thumb.webp" alt="SIROS ${m.name}" loading="${loading}" decoding="async">
+          <img src="assets/products/${m.photo}-thumb.webp" alt="SIROS ${m.name}" loading="${loading}" decoding="async" width="640" height="853">
         </a>
         <div class="meta">
           <div class="meta__name"><h4>${m.name}</h4><span class="tag">${m.tag}</span></div>
@@ -159,14 +157,27 @@ const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
         </div>
       </article>`;
     }).join('');
-    const viewAll = curated ? `
+    let endTile = '';
+    if (grid.dataset.end === 'brochure') {
+      endTile = `
+      <div class="range-grid__item range-grid__item--viewall range-grid__item--end">
+        <div class="range-grid__item--viewall__inner">
+          <h4>The full catalog</h4>
+          <p>Specs, features and battery options for every model, in one PDF.</p>
+          <a class="card-btn card-btn--primary" href="assets/brochure/SIROS-catalog.pdf" download="SIROS-Vehicle-Catalog.pdf">Download brochure</a>
+          <a class="card-btn card-btn--ghost" href="models.html">Compare all models</a>
+        </div>
+      </div>`;
+    } else if (curated) {
+      endTile = `
       <a class="range-grid__item range-grid__item--viewall" href="models.html">
         <div class="range-grid__item--viewall__inner">
           <h4>View all models</h4>
           <span class="arrow"><span>See the full range</span><span aria-hidden="true">→</span></span>
         </div>
-      </a>` : '';
-    grid.innerHTML = cards + viewAll;
+      </a>`;
+    }
+    grid.innerHTML = cards + endTile;
   }
 
   if (bands && typeof SIROS_BATTERY_OPTIONS !== 'undefined') {
@@ -177,6 +188,91 @@ const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
         <span class="band-card__cells">${b.chem}</span>
       </div>`).join('');
   }
+})();
+
+/* ----------------------------------------------------------------- rails -- */
+/* Sideways shelves: native scroll + snap does the real work (touch swipe and
+   trackpads just work). This layer adds arrow buttons, mouse drag with
+   momentum, keyboard arrows, the live progress bar and the edge fades. */
+(function rails() {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-rail]').forEach((rail) => {
+    const track = rail.querySelector('[data-rail-track]');
+    if (!track) return;
+    const prev = rail.querySelector('[data-rail-prev]');
+    const next = rail.querySelector('[data-rail-next]');
+    const bar = rail.querySelector('.rail-progress');
+
+    const step = () => {
+      const item = track.firstElementChild;
+      if (!item) return track.clientWidth * 0.8;
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      const per = item.getBoundingClientRect().width + gap;
+      // move by whole cards, as many as fit, so the next set lands snapped
+      return per * Math.max(1, Math.floor(track.clientWidth / per));
+    };
+    const go = (dir) => track.scrollBy({ left: dir * step(), behavior: reduced ? 'auto' : 'smooth' });
+
+    function update() {
+      const max = track.scrollWidth - track.clientWidth;
+      const atStart = track.scrollLeft <= 2;
+      const atEnd = track.scrollLeft >= max - 2;
+      rail.classList.toggle('at-start', atStart);
+      rail.classList.toggle('at-end', atEnd);
+      if (prev) prev.disabled = atStart;
+      if (next) next.disabled = atEnd;
+      if (bar) {
+        const share = max > 0 ? track.clientWidth / track.scrollWidth : 1;
+        const p = max > 0 ? track.scrollLeft / max : 0;
+        bar.style.setProperty('--rail-thumb', `${share * 100}%`);
+        bar.style.setProperty('--rail-x', `${p * (1 / share - 1) * 100}%`);
+        bar.hidden = max <= 0;
+      }
+    }
+    prev?.addEventListener('click', () => go(-1));
+    next?.addEventListener('click', () => go(1));
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    track.addEventListener('keydown', (e) => {
+      if (e.target !== track) return;
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+    });
+
+    // Mouse drag (touch and pen already scroll natively).
+    let down = false, moved = false, startX = 0, startLeft = 0, lastX = 0, lastT = 0, vel = 0, dragEnd = 0;
+    track.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      down = true; moved = false; startX = lastX = e.clientX; startLeft = track.scrollLeft; lastT = performance.now(); vel = 0;
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (!down) return;
+      const dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) > 6) { moved = true; track.classList.add('is-dragging'); }
+      if (!moved) return;
+      const now = performance.now();
+      vel = (e.clientX - lastX) / Math.max(1, now - lastT);
+      lastX = e.clientX; lastT = now;
+      track.scrollLeft = startLeft - dx;
+    });
+    window.addEventListener('pointerup', () => {
+      if (!down) return;
+      down = false;
+      if (!moved) return;
+      // carry a little momentum, then let snap settle on a card
+      const fling = reduced ? 0 : -vel * 260;
+      dragEnd = performance.now();
+      track.classList.remove('is-dragging');
+      track.scrollBy({ left: fling, behavior: reduced ? 'auto' : 'smooth' });
+    });
+    // the click that ends a drag shouldn't open the card underneath
+    track.addEventListener('click', (e) => {
+      if (performance.now() - dragEnd < 80) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+
+    window.addEventListener('load', update);
+    update();
+  });
 })();
 
 /* --------------------------------------------------------------- dealers -- */
