@@ -135,23 +135,30 @@ const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
 
   if (grid) {
     const curated = grid.dataset.curated ? grid.dataset.curated.split(',') : null;
-    const list = curated ? SIROS_MODELS.filter((m) => curated.includes(m.slug)) : SIROS_MODELS;
-    const cards = list.map((m) => `
+    const list = curated ? curated.map((s) => SIROS_MODELS.find((m) => m.slug === s)).filter(Boolean) : SIROS_MODELS;
+    // The homepage rail is pinned and panned sideways with a transform, so
+    // native lazy-loading only fires as each card slides in — the photo pops
+    // in late. The curated rail is small; load it up front.
+    const loading = curated ? 'eager' : 'lazy';
+    const cards = list.map((m) => {
+      const from = m.prices ? Math.min(...m.prices) : null;
+      return `
       <article class="range-grid__item">
         <a class="thumb${m.cutout ? ' thumb--cutout' : ''}" href="product.html?model=${m.slug}" aria-label="View ${m.name}">
-          <img src="assets/products/${m.photo}.webp" alt="SIROS ${m.name}" loading="lazy">
+          <img src="assets/products/${m.photo}-thumb.webp" alt="SIROS ${m.name}" loading="${loading}" decoding="async">
         </a>
         <div class="meta">
-          <div class="meta__brand"><img class="meta__mark" src="assets/brand/mark.png" alt=""><span>SIROS</span></div>
           <div class="meta__name"><h4>${m.name}</h4><span class="tag">${m.tag}</span></div>
-          <p class="meta__blurb">${m.blurb || ''}</p>
-          <div class="meta__price"><span>On-road price</span><strong>Confirmed at enquiry</strong></div>
+          <div class="meta__price">${from
+            ? `<span>Starting at</span><strong>${formatINR(from)}</strong>`
+            : `<span>Price</span><strong>On request</strong>`}</div>
           <div class="meta__actions">
-            <a class="card-btn card-btn--primary" href="product.html?model=${m.slug}">Explore ${m.name} <span aria-hidden="true">→</span></a>
-            <a class="card-btn card-btn--ghost" href="mailto:info@sirosvehicles.com?subject=${encodeURIComponent(m.name + ' enquiry')}">Ask price <span aria-hidden="true">→</span></a>
+            <a class="card-btn card-btn--primary" href="product.html?model=${m.slug}">Explore <span aria-hidden="true">→</span></a>
+            <a class="card-btn card-btn--ghost" href="mailto:info@sirosvehicles.com?subject=${encodeURIComponent(m.name + ' enquiry')}">Enquire</a>
           </div>
         </div>
-      </article>`).join('');
+      </article>`;
+    }).join('');
     const viewAll = curated ? `
       <a class="range-grid__item range-grid__item--viewall" href="models.html">
         <div class="range-grid__item--viewall__inner">
@@ -162,12 +169,12 @@ const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
     grid.innerHTML = cards + viewAll;
   }
 
-  if (bands && typeof SIROS_BATTERY_BANDS !== 'undefined') {
-    bands.innerHTML = SIROS_BATTERY_BANDS.map((b) => `
+  if (bands && typeof SIROS_BATTERY_OPTIONS !== 'undefined') {
+    bands.innerHTML = SIROS_BATTERY_OPTIONS.map((b) => `
       <div class="band-card">
         <span class="band-card__volt">${b.volt}</span>
         <span class="band-card__range">${b.range}</span>
-        <span class="band-card__cells">${b.cells}</span>
+        <span class="band-card__cells">${b.chem}</span>
       </div>`).join('');
   }
 })();

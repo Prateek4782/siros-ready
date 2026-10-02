@@ -5,10 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SIROS: Electric vehicles built on ten years of trust</title>
 <meta name="description" content="SIROS Vehicles Pvt. Ltd.: electric scooters and utility vehicles manufactured at our own plant in Sirsa, Haryana. 10 साल का भरोसा.">
-<link rel="icon" href="assets/brand/mark.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/brand/logo-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@500;700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/01-hero-poster.webp" fetchpriority="high">
 <link rel="stylesheet" href="scrollcraft.css">
 <link rel="stylesheet" href="site.css">
 </head>
@@ -19,7 +21,7 @@
 
 <nav class="nav" aria-label="Primary">
   <a class="nav__brand" href="#top">
-    <img src="assets/brand/mark.png" alt="" width="44" height="44">
+    <img src="assets/brand/logo-96.png" alt="" width="44" height="44">
     <span class="nav__wordmark">SIROS</span>
   </a>
   <div class="nav__links">
@@ -27,7 +29,7 @@
     <a href="#trust">Why SIROS</a>
     <a href="#emi">Ownership</a>
     <a href="dealers.html">Dealers</a>
-    <a href="dealer.html">Become a Dealer</a>git s
+    <a href="dealer.html">Become a Dealer</a>
     <a href="#faq">FAQ</a>
   </div>
   <button class="nav__section" id="navSection" aria-expanded="false" aria-controls="mobileMenu" aria-label="Jump to a section">
@@ -61,14 +63,13 @@
        background; no scroll-scrubbing, no pin. A dark scrim sits over the
        video so the heading reads clean regardless of which frame is showing. -->
   <section class="hero-simple" data-sc-act="flow" data-sc-drift="#FFFCF8">
-    <video class="hero-simple__video" poster="assets/01-hero-poster.webp" autoplay muted loop playsinline>
+    <video class="hero-simple__video" poster="assets/01-hero-poster.webp" autoplay muted loop playsinline preload="auto">
       <source src="assets/01-hero-m.mp4" media="(max-width: 760px)">
       <source src="assets/01-hero.mp4">
     </video>
     <div class="hero-simple__content" data-sc-in>
       <div class="hero-simple__brand">
-        <img class="hero-simple__mark" src="assets/brand/mark.png" alt="">
-        <span class="hero-simple__word">SIROS</span>
+        <img class="hero-simple__mark" src="assets/brand/logo-192.png" alt="SIROS" width="192" height="192">
       </div>
       <h1 class="hero-simple__heading">Electricity for <em>every journey.</em></h1>
       <p class="hero-simple__sub">Electric mobility manufactured at our own plant, for the pace of everyday India.</p>
@@ -135,8 +136,42 @@
         <h2 class="section-heading">The range, <em>photographed.</em></h2>
         <p class="sc-body">Built for different routes and reasons to go electric. Five from the lineup, and the full range is one tap away.</p>
       </div>
-      <div class="range-grid" id="rangeGrid" data-curated="nexa,ac1,cruz,olpro,loder" data-sc-pan="0.1"></div>
+      <div class="range-grid" id="rangeGrid" data-curated="nexa,ac1,e4,cruze-pro,ol" data-sc-pan="0.1"></div>
       <div class="rail-progress" id="rangeProgress" aria-hidden="true"><span></span></div>
+    </div>
+  </section>
+
+  <!-- Colours — flow. SIROS's own colour-lineup photography, swiped sideways. -->
+  <section class="sc-section colour-gallery" data-sc-act="flow" data-sc-drift="#FFFCF8">
+    <div class="sc-wrap colour-gallery__head" data-sc-in>
+      <p class="eyebrow">Pick your colour</p>
+      <h2 class="section-heading">Every model, <em>five ways.</em></h2>
+    </div>
+    <div class="colour-gallery__rail" data-sc-in>
+      <a class="colour-tile" href="product.html?model=ac1">
+        <img src="assets/lineup/ac1-colours-800.webp" srcset="assets/lineup/ac1-colours-800.webp 800w, assets/lineup/ac1-colours.webp 1536w" sizes="(max-width: 760px) 86vw, 44rem" alt="SIROS AC1 in black, white, silver, navy blue and red" width="1536" height="1024" loading="lazy" decoding="async">
+        <span class="colour-tile__cap"><strong>AC1</strong>Explore →</span>
+      </a>
+      <a class="colour-tile" href="product.html?model=e4">
+        <img src="assets/lineup/e4-colours-800.webp" srcset="assets/lineup/e4-colours-800.webp 800w, assets/lineup/e4-colours.webp 1535w" sizes="(max-width: 760px) 86vw, 44rem" alt="SIROS E4 in white, black, green, grey and baby blue" width="1535" height="1024" loading="lazy" decoding="async">
+        <span class="colour-tile__cap"><strong>E4</strong>Explore →</span>
+      </a>
+      <a class="colour-tile" href="product.html?model=cruze-pro">
+        <img src="assets/lineup/cruze-pro-colours-800.webp" srcset="assets/lineup/cruze-pro-colours-800.webp 800w, assets/lineup/cruze-pro-colours.webp 1536w" sizes="(max-width: 760px) 86vw, 44rem" alt="SIROS Cruze Pro in white, black, baby blue, silver and teal" width="1536" height="1024" loading="lazy" decoding="async">
+        <span class="colour-tile__cap"><strong>Cruze Pro</strong>Explore →</span>
+      </a>
+      <a class="colour-tile" href="product.html?model=ol">
+        <img src="assets/lineup/ol-colours-800.webp" srcset="assets/lineup/ol-colours-800.webp 800w, assets/lineup/ol-colours.webp 1536w" sizes="(max-width: 760px) 86vw, 44rem" alt="SIROS OL in white, black, baby blue, silver and teal" width="1536" height="1024" loading="lazy" decoding="async">
+        <span class="colour-tile__cap"><strong>OL</strong>Explore →</span>
+      </a>
+      <a class="colour-tile" href="product.html?model=cruze">
+        <img src="assets/lineup/cruze-colours-800.webp" srcset="assets/lineup/cruze-colours-800.webp 800w, assets/lineup/cruze-colours.webp 1536w" sizes="(max-width: 760px) 86vw, 44rem" alt="SIROS Cruze in five colours" width="1536" height="1024" loading="lazy" decoding="async">
+        <span class="colour-tile__cap"><strong>Cruze</strong>Explore →</span>
+      </a>
+      <a class="colour-tile" href="models.html">
+        <img src="assets/lineup/showroom-wave-800.webp" srcset="assets/lineup/showroom-wave-800.webp 800w, assets/lineup/showroom-wave.webp 1080w" sizes="(max-width: 760px) 86vw, 44rem" alt="A row of SIROS scooters in five colours" width="1080" height="852" loading="lazy" decoding="async">
+        <span class="colour-tile__cap"><strong>The full range</strong>See every model →</span>
+      </a>
     </div>
   </section>
 
@@ -150,7 +185,7 @@
         <div>
           <p class="eyebrow">Range by battery configuration</p>
           <div class="band-grid" id="bandRows"></div>
-          <p class="sc-body" style="font-size:var(--sc-t-xs); margin-top:1rem">As stated in the SIROS vehicle catalog. Actual range varies with load and riding conditions.</p>
+          <p class="sc-body" style="font-size:var(--sc-t-xs); margin-top:1rem">Range per charge as stated by SIROS. Actual range varies with load and riding conditions. Price depends on the battery you choose.</p>
         </div>
       </div>
 
@@ -177,7 +212,7 @@
       <div class="feature-spotlight" style="margin-top:clamp(3rem,6vw,4.5rem)">
         <div class="feature-spotlight__media">
           <img src="assets/products/gen-light.webp" alt="A light-colourway SIROS electric scooter">
-          <img class="feature-spotlight__mark" src="assets/brand/mark.png" alt="">
+          <img class="feature-spotlight__mark" src="assets/brand/logo-96.png" alt="" width="96" height="96">
         </div>
         <div class="feature-spotlight__body">
           <p class="eyebrow">Built for the way India moves</p>
@@ -248,6 +283,22 @@
     </div>
   </section>
 
+  <!-- Lifestyle — flow. SIROS's own campaign poster, framed as the poster it is. -->
+  <section class="sc-section friends-band" data-sc-act="flow" data-sc-drift="#FFFCF8">
+    <div class="sc-wrap friends-band__grid">
+      <figure class="friends-band__media" data-sc-in>
+        <img src="assets/lineup/e4-friends-800.webp" srcset="assets/lineup/e4-friends-800.webp 800w, assets/lineup/e4-friends.webp 1402w" sizes="(max-width: 900px) 92vw, 40rem" alt="Three school friends riding SIROS E4 scooters in orange, silver and green" width="1402" height="1122" loading="lazy" decoding="async">
+      </figure>
+      <div class="friends-band__copy sc-stack" data-sc-in data-sc-stagger="70">
+        <p class="eyebrow">Friends. Freedom. Future.</p>
+        <h2 class="sc-display sc-display--md">One ride.<br><em>Endless memories.</em></h2>
+        <p class="sc-body">No petrol, low maintenance and easy on the pocket. The E4 is made for the everyday rides that end up mattering most.</p>
+        <p class="sc-body friends-band__hi">हमारी दोस्ती, हमारी सवारी, हमारा स्टाइल।</p>
+        <div><a class="btn btn--accent" href="product.html?model=e4">Explore the E4 <span aria-hidden="true">→</span></a></div>
+      </div>
+    </div>
+  </section>
+
   <!-- About — flow. Who SIROS is, before the proof-points act makes the case. -->
   <section class="sc-section meet-siros" data-sc-act="flow" data-sc-drift="#FFFCF8">
     <div class="sc-wrap meet-siros__grid">
@@ -281,7 +332,7 @@
   <!-- 4 · REASSURANCE — pin. The peak. Ground: generated plant still. Ledger fires here. -->
   <section id="trust" data-sc-act="pin" data-sc-span="5.2" data-sc-drift="#181E22">
     <div data-sc-stage class="trust-stage">
-      <img class="sc-stage__poster" src="assets/03-plant.webp" alt="Rows of finished SIROS scooters outside the Sirsa plant">
+      <img class="sc-stage__poster" src="assets/03-lineup.webp" alt="A row of SIROS scooters in five colours" loading="lazy" decoding="async">
       <div class="trust-scrim" aria-hidden="true"></div>
       <div class="trust-argument">
         <p data-sc-cue="0 0.32 0 0.16" data-ledger-claim="Own manufacturing plant in Sirsa, Haryana" data-ledger-id="plant">SIROS is not a new badge.<small>Every vehicle is built at our own plant in Sirsa, Haryana. Not put together from someone else's parts.</small></p>
@@ -352,6 +403,10 @@
           <div class="faq-a"><p>Lithium packs charge in about 3–4 hours; lead-acid packs take roughly 7–8 hours, as stated in the SIROS vehicle catalog. Actual performance can vary with load and riding conditions.</p></div>
         </div>
         <div class="faq-item">
+          <button class="faq-q" aria-expanded="false"><span>How much does a SIROS cost?</span><i aria-hidden="true"></i></button>
+          <div class="faq-a"><p>Prices start at ₹46,000 for the Nexa with a 48V lead-acid battery and go up to ₹93,000, depending on the model and the battery you pick. Every model's page lists its price for each battery option. Your dealer confirms the final on-road price.</p></div>
+        </div>
+        <div class="faq-item">
           <button class="faq-q" aria-expanded="false"><span>What's the battery warranty?</span><i aria-hidden="true"></i></button>
           <div class="faq-a"><p>3 years on lithium battery packs, 1 year on lead-acid packs. Standard across every SIROS model, not an upsell.</p></div>
         </div>
@@ -393,7 +448,7 @@
     <div class="site-footer__top">
       <div class="site-footer__brand">
         <a class="nav__brand" href="#top">
-          <img src="assets/brand/mark.png" alt="" width="36" height="36">
+          <img src="assets/brand/logo-96.png" alt="" width="36" height="36">
           <span class="nav__wordmark">SIROS</span>
         </a>
         <p>Electric mobility manufactured at our own plant in Sirsa, Haryana. 10 साल का भरोसा.</p>
@@ -401,9 +456,10 @@
       <div class="site-footer__col">
         <p class="site-footer__heading">Vehicles</p>
         <a href="product.html?model=nexa">Nexa</a>
-        <a href="product.html?model=zl">ZL</a>
         <a href="product.html?model=ac1">AC1</a>
-        <a href="product.html?model=loder">Loder</a>
+        <a href="product.html?model=e4">E4</a>
+        <a href="product.html?model=cruze-pro">Cruze Pro</a>
+        <a href="product.html?model=ol">OL</a>
         <a href="#range">View full range ↗</a>
       </div>
       <div class="site-footer__col">
