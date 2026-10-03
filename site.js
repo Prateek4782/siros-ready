@@ -253,8 +253,12 @@ function sirosFocusTrap(container) {
   function update() {
     const input = picker.querySelector('input:checked');
     if (!input) return;
+    const changed = price.textContent !== input.dataset.price;
     price.textContent = input.dataset.price;
     range.textContent = input.dataset.range;
+    if (changed) {
+      [price, range].forEach((el) => { el.classList.remove('pm-tick'); void el.offsetWidth; el.classList.add('pm-tick'); });
+    }
     label.textContent = input.dataset.label;
     rows.forEach((r) => r.classList.toggle('is-current', r.dataset.row === input.value));
     if (enquire) enquire.href = sirosWhatsApp(`Hi SIROS, I'm interested in the ${model} with the ${input.dataset.label} battery (${input.dataset.price}). Please share the details.`);
