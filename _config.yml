@@ -1,0 +1,19 @@
+# GitHub Pages builds this folder with Jekyll. These are working files kept
+# in the repo for reference; they must not be published on the live site.
+exclude:
+  - BRIEF.md
+  - Open Website.bat
+  - apps-script
+  - catalog-extract
+  - out
+  - tools
+  - assets/products/ac1-raw.png
+  - assets/products/cruz-raw.png
+  - assets/products/e4-raw.png
+  - assets/products/iq-raw.png
+  - assets/products/loder-raw.png
+  - assets/products/nexa-raw.png
+  - assets/products/olpro-raw.png
+  - assets/products/zl-raw.png
+  - assets/01-hero-poster.png
+  - assets/brand/mark.png

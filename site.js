@@ -1,5 +1,17 @@
 const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
 
+/* Contact: WhatsApp is the primary channel, email the fallback. */
+const SIROS_WHATSAPP = '919649319677';
+const SIROS_EMAIL = 'siroselectric@gmail.com';
+const sirosWhatsApp = (text) => `https://wa.me/${SIROS_WHATSAPP}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
+
+/* Site root, worked out from where this script was loaded, so links and
+   assets built here resolve the same from /index.html and /models/nexa/. */
+const SIROS_ROOT = (() => {
+  try { return new URL('.', document.currentScript.src).href; } catch (e) { return ''; }
+})();
+const sirosModelUrl = (slug) => `${SIROS_ROOT}models/${slug}/`;
+
 /* ------------------------------------------------- hero video, file:// fallback --
    The scroll-scrub engine loads the clip by fetching it and building a blob
    URL, so it can seek without needing HTTP range support. That fetch is
@@ -29,16 +41,48 @@ const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
   }, 3000);
 })();
 
+/* Keeps Tab / Shift+Tab inside an open overlay (menu or dialog) and returns
+   focus to whatever opened it. */
+function sirosFocusTrap(container) {
+  let returnTo = null;
+  const focusables = () => [...container.querySelectorAll('a[href], button:not([disabled]), input:not([type=hidden]):not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])')]
+    .filter((el) => !el.closest('[hidden]') && el.getClientRects().length);
+  function onKey(e) {
+    if (e.key !== 'Tab') return;
+    const els = focusables();
+    if (!els.length) return;
+    const first = els[0], last = els[els.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+  return {
+    activate() { returnTo = document.activeElement; document.addEventListener('keydown', onKey); },
+    deactivate() {
+      document.removeEventListener('keydown', onKey);
+      if (returnTo && document.contains(returnTo)) returnTo.focus({ preventScroll: true });
+      returnTo = null;
+    },
+  };
+}
+
 /* --------------------------------------------------------- mobile menu -- */
 (function mobileMenu() {
   const btn = document.querySelector('#navMenuBtn');
   const menu = document.querySelector('#mobileMenu');
   const closeBtn = document.querySelector('#mobileMenuClose');
   if (!btn || !menu) return;
+  const trap = sirosFocusTrap(menu);
+  menu.inert = true;
   function setOpen(open) {
+    if (open === menu.classList.contains('is-open')) return;
     btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     menu.classList.toggle('is-open', open);
+    menu.setAttribute('aria-hidden', String(!open));
+    menu.inert = !open;
     document.documentElement.style.overflow = open ? 'hidden' : '';
+    if (open) { trap.activate(); menu.querySelector('a')?.focus({ preventScroll: true }); }
+    else trap.deactivate();
   }
   btn.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
   closeBtn?.addEventListener('click', () => setOpen(false));
@@ -133,8 +177,11 @@ const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
   const bands = document.querySelector('#bandRows');
   if (typeof SIROS_MODELS === 'undefined') return;
 
-  if (grid) {
+  // data-static: the cards were written into the HTML by tools/build-model-pages.mjs
+  if (grid && !grid.hasAttribute('data-static')) {
     const curated = grid.dataset.curated ? grid.dataset.curated.split(',') : null;
+    // models.html lists cards straight under its h1; the homepage under an h2
+    const hx = grid.closest('.models-page-section') ? 'h2' : 'h3';
     const list = curated ? curated.map((s) => SIROS_MODELS.find((m) => m.slug === s)).filter(Boolean) : SIROS_MODELS;
     const cards = list.map((m, i) => {
       const from = m.prices ? Math.min(...m.prices) : null;
@@ -142,17 +189,17 @@ const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
       const loading = i < 4 ? 'eager' : 'lazy';
       return `
       <article class="range-grid__item">
-        <a class="thumb${m.cutout ? ' thumb--cutout' : ''}" href="product.html?model=${m.slug}" aria-label="View ${m.name}">
-          <img src="assets/products/${m.photo}-thumb.webp" alt="SIROS ${m.name}" loading="${loading}" decoding="async" width="640" height="853">
+        <a class="thumb${m.cutout ? ' thumb--cutout' : ''}" href="${sirosModelUrl(m.slug)}" aria-label="View ${m.name}">
+          <img src="${SIROS_ROOT}assets/products/${m.photo}-thumb.webp" alt="SIROS ${m.name}" loading="${loading}" decoding="async" width="640" height="853">
         </a>
         <div class="meta">
-          <div class="meta__name"><h4>${m.name}</h4><span class="tag">${m.tag}</span></div>
+          <div class="meta__name"><${hx}>${m.name}</${hx}><span class="tag">${m.tag}</span></div>
           <div class="meta__price">${from
             ? `<span>Starting at</span><strong>${formatINR(from)}</strong>`
             : `<span>Price</span><strong>On request</strong>`}</div>
           <div class="meta__actions">
-            <a class="card-btn card-btn--primary" href="product.html?model=${m.slug}">Explore <span aria-hidden="true">→</span></a>
-            <a class="card-btn card-btn--ghost" href="mailto:info@sirosvehicles.com?subject=${encodeURIComponent(m.name + ' enquiry')}">Enquire</a>
+            <a class="card-btn card-btn--primary" href="${sirosModelUrl(m.slug)}">Explore <span aria-hidden="true">→</span></a>
+            <a class="card-btn card-btn--ghost" href="${sirosWhatsApp(`Hi SIROS, I'm interested in the ${m.name}. Please share the price and details.`)}" target="_blank" rel="noopener">Enquire</a>
           </div>
         </div>
       </article>`;
@@ -162,17 +209,17 @@ const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
       endTile = `
       <div class="range-grid__item range-grid__item--viewall range-grid__item--end">
         <div class="range-grid__item--viewall__inner">
-          <h4>The full catalog</h4>
+          <h3>The full catalog</h3>
           <p>Specs, features and battery options for every model, in one PDF.</p>
-          <a class="card-btn card-btn--primary" href="assets/brochure/SIROS-catalog.pdf" download="SIROS-Vehicle-Catalog.pdf">Download brochure</a>
-          <a class="card-btn card-btn--ghost" href="models.html">Compare all models</a>
+          <a class="card-btn card-btn--primary" href="${SIROS_ROOT}assets/brochure/SIROS-catalog.pdf" download="SIROS-Vehicle-Catalog.pdf">Download brochure</a>
+          <a class="card-btn card-btn--ghost" href="${SIROS_ROOT}models.html">Compare all models</a>
         </div>
       </div>`;
     } else if (curated) {
       endTile = `
-      <a class="range-grid__item range-grid__item--viewall" href="models.html">
+      <a class="range-grid__item range-grid__item--viewall" href="${SIROS_ROOT}models.html">
         <div class="range-grid__item--viewall__inner">
-          <h4>View all models</h4>
+          <h3>View all models</h3>
           <span class="arrow"><span>See the full range</span><span aria-hidden="true">→</span></span>
         </div>
       </a>`;
@@ -283,6 +330,8 @@ const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
   if (!searchInput || typeof SIROS_DEALERS === 'undefined') return;
 
   const STATE_NAMES = { rj: 'Rajasthan', mp: 'Madhya Pradesh' };
+  // dealers.html puts results straight under its h1; the homepage under an h2
+  const cardHeading = document.querySelector('.dealers-page-section') ? 'h2' : 'h3';
 
   function matches(d, q) {
     return !!(d.town && d.town.toLowerCase().includes(q));
@@ -292,7 +341,7 @@ const formatINR = (v) => `₹${new Intl.NumberFormat('en-IN').format(v)}`;
     const showFirm = d.firm && d.firm !== title;
     const q = encodeURIComponent([d.firm, d.address, d.pin].filter(Boolean).join(', '));
     return `<div class="dealer-card">
-      <div class="dealer-card__top"><h4>${title}</h4><span class="dealer-card__state">${STATE_NAMES[d.state] || d.state}</span></div>
+      <div class="dealer-card__top"><${cardHeading}>${title}</${cardHeading}><span class="dealer-card__state">${STATE_NAMES[d.state] || d.state}</span></div>
       ${showFirm || d.contact ? `<p class="dealer-card__meta">${[d.firm, d.contact].filter(Boolean).join(' · ')}</p>` : ''}
       ${d.address ? `<address>${d.address}${d.pin ? `, ${d.pin}` : ''}</address>` : ''}
       <a href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">Get directions →</a>
@@ -488,8 +537,8 @@ const sirosPhone = window.matchMedia('(max-width: 760px)');
 
 /* ------------------------------------------------------------ test ride modal -- */
 /* Paste your Google Apps Script Web App URL here to log every submission
-   into a Google Sheet, in addition to the mailto it already sends. Leave it
-   blank and the form behaves exactly as before (mailto only). See
+   into a Google Sheet, in addition to the WhatsApp message it opens. Leave it
+   blank and the form still works (WhatsApp only). See
    apps-script/test-ride-sheet.gs for the script this URL comes from. */
 const TEST_RIDE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx3y-ziQXL8bS68UAMFEh-N0KLr-ad4PmG-eRul-YXRJi7diZfAYcby1TKiIaJ_yocJ/exec';
 
@@ -499,6 +548,30 @@ const TEST_RIDE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx3y-ziQXL8
    open it on their own terms. sessionStorage caps the automatic one to once
    per tab — the floating button is never capped, since choosing to tap it
    is never an interruption. */
+/* Opens WhatsApp in a new tab (the app on phones), falling back to the same
+   tab if a popup blocker refuses. Returns the link so the confirmation can
+   offer it as a button too. */
+function sirosOpenWhatsApp(text) {
+  const url = sirosWhatsApp(text);
+  const win = window.open(url, '_blank', 'noopener');
+  if (!win) window.location.href = url;
+  return url;
+}
+function sirosDoneMessage(title, line, url) {
+  const done = document.createElement('div');
+  done.className = 'tr-form__done';
+  const strong = document.createElement('strong');
+  strong.textContent = title;
+  const span = document.createElement('span');
+  span.textContent = line;
+  const a = document.createElement('a');
+  a.className = 'tr-form__wa';
+  a.href = url; a.target = '_blank'; a.rel = 'noopener';
+  a.textContent = 'Open WhatsApp';
+  done.append(strong, span, a);
+  return done;
+}
+
 (function testRideModal() {
   // The dealer-application page is its own B2B flow with its own CTA — a
   // consumer "book a test ride" prompt interrupting it is off-message, so
@@ -529,27 +602,28 @@ const TEST_RIDE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx3y-ziQXL8
       <button class="tr-modal__close" type="button" data-tr-close aria-label="Close">✕</button>
       <div class="tr-modal__head">
         <span class="tr-modal__eyebrow">// BOOK A TEST RIDE</span>
-        <h3 id="trTitle">Feel the <em>electric</em> shift.</h3>
+        <h2 id="trTitle">Feel the <em>electric</em> shift.</h2>
         <p>Pick a model and tell us where you are. A SIROS rep sets up your ride.</p>
       </div>
       <form class="tr-form" id="trForm">
         <label class="tr-field"><span>Full name</span>
-          <input type="text" name="name" required autocomplete="name">
+          <input type="text" name="name" required autocomplete="name" maxlength="80">
         </label>
         <label class="tr-field"><span>Phone number</span>
           <input type="tel" name="phone" required autocomplete="tel" pattern="[0-9+\\s\\-]{7,15}">
         </label>
         <label class="tr-field"><span>City</span>
-          <input type="text" name="city" required autocomplete="address-level2">
+          <input type="text" name="city" required autocomplete="address-level2" maxlength="60">
         </label>
         <label class="tr-field"><span>Model you're curious about</span>
-          <input type="text" name="model" list="trModelsList" placeholder="e.g. Nexa" autocomplete="off">
+          <input type="text" name="model" list="trModelsList" placeholder="e.g. Nexa" autocomplete="off" maxlength="40">
           <datalist id="trModelsList">${modelOptions}</datalist>
         </label>
+        <label class="tr-hp" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
         <button class="tr-form__submit" type="submit">
           <span>Book test ride</span><span class="tr-form__submit-arrow" aria-hidden="true">→</span>
         </button>
-        <p class="tr-form__note">Opens your mail app to info@sirosvehicles.com — a SIROS rep replies with times.</p>
+        <p class="tr-form__note">Opens WhatsApp with your request ready to send to SIROS (+91 96493 19677). Your name, phone and city are used only to arrange this ride.</p>
       </form>
     </div>`;
   document.body.appendChild(modal);
@@ -577,6 +651,8 @@ const TEST_RIDE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx3y-ziQXL8
   const panel = modal.querySelector('.tr-modal__panel');
   const head = modal.querySelector('.tr-modal__head');
   const form = modal.querySelector('#trForm');
+  panel.tabIndex = -1;
+  const trap = sirosFocusTrap(panel);
   let closeTimer = null;
 
   function markShown() { try { sessionStorage.setItem(SHOWN_KEY, '1'); } catch (e) { /* ignore */ } }
@@ -590,17 +666,22 @@ const TEST_RIDE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx3y-ziQXL8
     form.reset();
   }
 
-  function open() {
+  // auto = opened by the scroll trigger rather than a tap: focus the dialog
+  // itself, not the name field, so a phone keyboard doesn't jump up uninvited.
+  function open(auto = false) {
+    if (!modal.hidden) return;
     markShown();
     detachScrollTrigger();
     resetForm();
+    trap.activate();
     modal.hidden = false;
     fab.classList.add('is-hidden');
     document.documentElement.style.overflow = 'hidden';
     // rAF so the browser paints the pre-transition state before .is-open applies.
     requestAnimationFrame(() => requestAnimationFrame(() => {
       modal.classList.add('is-open');
-      form.querySelector('input[name="name"]')?.focus({ preventScroll: true });
+      const target = auto === true ? panel : form.querySelector('input[name="name"]');
+      target?.focus({ preventScroll: true });
     }));
   }
 
@@ -611,10 +692,11 @@ const TEST_RIDE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx3y-ziQXL8
     modal.classList.remove('is-open');
     document.documentElement.style.overflow = '';
     fab.classList.remove('is-hidden');
+    trap.deactivate();
     window.setTimeout(() => { modal.hidden = true; modal.classList.remove('is-closing'); }, 200);
   }
 
-  fab.addEventListener('click', open);
+  fab.addEventListener('click', () => open());
   // The homepage's own "Test ride" quick-action card used to just scroll to
   // the closing CTA. Now that a real booking form exists, it opens that
   // instead — one "test ride" story across the page, not two.
@@ -629,38 +711,28 @@ const TEST_RIDE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx3y-ziQXL8
     const phone = String(data.get('phone') || '').trim();
     const city = String(data.get('city') || '').trim();
     const model = String(data.get('model') || '').trim();
-    const subject = encodeURIComponent('Test ride request');
-    const bodyLines = [
+    const message = [
+      'Hi SIROS, I would like to book a test ride.',
       `Name: ${name}`, `Phone: ${phone}`, `City: ${city}`,
       model ? `Model: ${model}` : null,
-    ].filter(Boolean);
-    const body = encodeURIComponent(bodyLines.join('\n'));
-    const mailto = `mailto:info@sirosvehicles.com?subject=${subject}&body=${body}`;
+    ].filter(Boolean).join('\n');
 
-    // Logged to the Sheet in parallel with the mailto, never blocking or
+    // Logged to the Sheet in parallel with WhatsApp, never blocking or
     // gating it: a visitor's confirmation flow can't depend on a network
     // call to a script that might be slow, misconfigured, or (until the
     // constant above is set) simply absent.
-    if (TEST_RIDE_SHEET_URL) {
+    if (TEST_RIDE_SHEET_URL && !data.get('website')) {
       fetch(TEST_RIDE_SHEET_URL, {
         method: 'POST',
         mode: 'no-cors',
         body: new URLSearchParams({ name, phone, city, model, page: location.pathname }),
-      }).catch(() => { /* best-effort; the mailto is the real fallback */ });
+      }).catch(() => { /* best-effort; WhatsApp is the real channel */ });
     }
 
+    const url = sirosOpenWhatsApp(message);
     head.hidden = true;
     form.hidden = true;
-    const done = document.createElement('div');
-    done.className = 'tr-form__done';
-    const strong = document.createElement('strong');
-    strong.textContent = `You're set, ${name.split(' ')[0] || 'rider'}.`;
-    const span = document.createElement('span');
-    span.textContent = 'Opening your mail app to confirm a time…';
-    done.append(strong, span);
-    panel.appendChild(done);
-    window.location.href = mailto;
-    closeTimer = window.setTimeout(close, 2200);
+    panel.appendChild(sirosDoneMessage(`You're set, ${name.split(' ')[0] || 'rider'}.`, 'Send the WhatsApp message that just opened and a SIROS rep will confirm a time.', url));
   });
 
   let queued = false;
@@ -675,7 +747,7 @@ const TEST_RIDE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx3y-ziQXL8
       // actually started.
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       if (maxScroll < 600) return; // too short for "the middle" to mean anything
-      if (window.scrollY / maxScroll >= 0.5) open();
+      if (window.scrollY / maxScroll >= 0.5) open(true);
     });
   }
   function detachScrollTrigger() { window.removeEventListener('scroll', onScroll); }
@@ -688,7 +760,7 @@ const TEST_RIDE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx3y-ziQXL8
 /* Paste your Google Apps Script Web App URL here to log dealer applications
    into their own Google Sheet — separate from TEST_RIDE_SHEET_URL above, so
    the two lists never mix. See apps-script/dealer-application-sheet.gs.
-   Leave blank and the form still works (mailto only), same as the test-ride
+   Leave blank and the form still works (WhatsApp only), same as the test-ride
    one. Only dealer.html has the markup this targets, so this whole block is
    a no-op everywhere else. */
 const DEALER_APP_SHEET_URL = '';
@@ -701,6 +773,7 @@ const DEALER_APP_SHEET_URL = '';
 
   const panel = modal.querySelector('.tr-modal__panel');
   const head = modal.querySelector('.tr-modal__head');
+  const trap = sirosFocusTrap(panel);
   let closeTimer = null;
 
   function resetForm() {
@@ -713,7 +786,9 @@ const DEALER_APP_SHEET_URL = '';
   }
 
   function open() {
+    if (!modal.hidden) return;
     resetForm();
+    trap.activate();
     modal.hidden = false;
     document.documentElement.style.overflow = 'hidden';
     requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -728,6 +803,7 @@ const DEALER_APP_SHEET_URL = '';
     modal.classList.add('is-closing');
     modal.classList.remove('is-open');
     document.documentElement.style.overflow = '';
+    trap.deactivate();
     window.setTimeout(() => { modal.hidden = true; modal.classList.remove('is-closing'); }, 200);
   }
 
@@ -743,33 +819,23 @@ const DEALER_APP_SHEET_URL = '';
     const phone = String(data.get('phone') || '').trim();
     const city = String(data.get('city') || '').trim();
     const message = String(data.get('message') || '').trim();
-    const subject = encodeURIComponent('Dealer application');
-    const bodyLines = [
+    const waText = [
+      'Hi SIROS, I would like to apply for a SIROS dealership.',
       `Name: ${name}`, business ? `Business: ${business}` : null,
       `Phone: ${phone}`, `City: ${city}`, message ? `Message: ${message}` : null,
-    ].filter(Boolean);
-    const body = encodeURIComponent(bodyLines.join('\n'));
-    const mailto = `mailto:info@sirosvehicles.com?subject=${subject}&body=${body}`;
+    ].filter(Boolean).join('\n');
 
-    if (DEALER_APP_SHEET_URL) {
+    if (DEALER_APP_SHEET_URL && !data.get('website')) {
       fetch(DEALER_APP_SHEET_URL, {
         method: 'POST',
         mode: 'no-cors',
         body: new URLSearchParams({ name, business, phone, city, message, page: location.pathname }),
-      }).catch(() => { /* best-effort; the mailto is the real fallback */ });
+      }).catch(() => { /* best-effort; WhatsApp is the real channel */ });
     }
 
+    const url = sirosOpenWhatsApp(waText);
     head.hidden = true;
     form.hidden = true;
-    const done = document.createElement('div');
-    done.className = 'tr-form__done';
-    const strong = document.createElement('strong');
-    strong.textContent = `Thanks, ${name.split(' ')[0] || 'there'}.`;
-    const span = document.createElement('span');
-    span.textContent = 'Opening your mail app to send it through…';
-    done.append(strong, span);
-    panel.appendChild(done);
-    window.location.href = mailto;
-    closeTimer = window.setTimeout(close, 2200);
+    panel.appendChild(sirosDoneMessage(`Thanks, ${name.split(' ')[0] || 'there'}.`, 'Send the WhatsApp message that just opened and the SIROS dealer team will get back to you.', url));
   });
 })();

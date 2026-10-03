@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://siroselectric.com/sitemap.xml

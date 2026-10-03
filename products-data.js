@@ -8,6 +8,12 @@
  * reuse their base model's photo (marked `variantOf`) until a dedicated shot
  * exists. `colours` points at an official colour-lineup image when SIROS has
  * supplied one for that exact model.
+ *
+ * AFTER EDITING THIS FILE, rebuild the static pages that are generated from it
+ * (every /models/<slug>/ page, the model cards in index.html and models.html,
+ * and sitemap.xml), plus the link-preview images:
+ *   node tools/build-model-pages.mjs
+ *   python tools/build-og-images.py
  */
 const SIROS_BATTERY_OPTIONS = [
   { chem: 'Lead-acid', volt: '48V 32AH', range: '50 km/charge' },

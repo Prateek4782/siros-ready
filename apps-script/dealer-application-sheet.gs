@@ -17,7 +17,19 @@
  *   4. Copy the Web app URL (ends in /exec).
  *   5. Paste it into DEALER_APP_SHEET_URL near the top of site.js.
  */
+// Public URL, so every value is untrusted: length-capped, and prefixed with '
+// if it starts with = + - @ so Sheets stores it as text, never as a formula.
+function clean_(v, max) {
+  var s = String(v || '').trim().slice(0, max);
+  return /^[=+\-@\t\r]/.test(s) ? "'" + s : s;
+}
+
 function doPost(e) {
+  var p = (e && e.parameter) || {};
+  if (p.website) { // honeypot field: filled only by bots
+    return ContentService.createTextOutput(JSON.stringify({ ok: true })).setMimeType(ContentService.MimeType.JSON);
+  }
+
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Dealer applications')
     || SpreadsheetApp.getActiveSpreadsheet().insertSheet('Dealer applications');
 
@@ -26,15 +38,14 @@ function doPost(e) {
     sheet.setFrozenRows(1);
   }
 
-  var p = e.parameter;
   sheet.appendRow([
     new Date(),
-    p.name || '',
-    p.business || '',
-    p.phone || '',
-    p.city || '',
-    p.message || '',
-    p.page || '',
+    clean_(p.name, 80),
+    clean_(p.business, 100),
+    clean_(p.phone, 20),
+    clean_(p.city, 60),
+    clean_(p.message, 300),
+    clean_(p.page, 120),
   ]);
 
   return ContentService

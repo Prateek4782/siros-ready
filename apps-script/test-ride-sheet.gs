@@ -20,7 +20,21 @@
  * timestamp. If you ever change the form's fields, add a matching column
  * here and to the URLSearchParams(...) call in site.js's submit handler.
  */
+// The web-app URL is public (it has to be, the website posts to it), so every
+// value is treated as untrusted: length-capped, and prefixed with ' if it
+// starts with = + - @ so Sheets stores it as text instead of running it as a
+// formula (e.g. a "name" of =IMPORTXML(...)).
+function clean_(v, max) {
+  var s = String(v || '').trim().slice(0, max);
+  return /^[=+\-@\t\r]/.test(s) ? "'" + s : s;
+}
+
 function doPost(e) {
+  var p = (e && e.parameter) || {};
+  if (p.website) { // honeypot field: filled only by bots
+    return ContentService.createTextOutput(JSON.stringify({ ok: true })).setMimeType(ContentService.MimeType.JSON);
+  }
+
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Test rides')
     || SpreadsheetApp.getActiveSpreadsheet().insertSheet('Test rides');
 
@@ -29,14 +43,13 @@ function doPost(e) {
     sheet.setFrozenRows(1);
   }
 
-  var p = e.parameter;
   sheet.appendRow([
     new Date(),
-    p.name || '',
-    p.phone || '',
-    p.city || '',
-    p.model || '',
-    p.page || '',
+    clean_(p.name, 80),
+    clean_(p.phone, 20),
+    clean_(p.city, 60),
+    clean_(p.model, 40),
+    clean_(p.page, 120),
   ]);
 
   return ContentService
