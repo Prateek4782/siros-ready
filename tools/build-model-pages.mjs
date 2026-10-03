@@ -155,28 +155,65 @@ function page(m) {
   }
 
   const enquireWa = wa(`Hi SIROS, I'm interested in the ${m.name}. Please share the price and details.`);
-  const rows = BATTERY.map((b, i) => `            <tr><td>${b.volt}</td><td>${b.chem}</td><td>${b.range}</td><td class="price">${hasPrice ? inr(m.prices[i]) : 'On request'}</td></tr>`).join('\n');
+  const current = hasPrice ? lowI : -1;
+  const rows = BATTERY.map((b, i) => `            <tr${i === current ? ' class="is-current"' : ''} data-row="${i}"><td>${b.volt}</td><td><span class="pm-chem${b.chem === 'Lithium' ? ' pm-chem--li' : ''}">${b.chem}</span></td><td>${b.range.replace('/charge', ' per charge')}</td><td>${hasPrice ? inr(m.prices[i]) : 'On request'}</td></tr>`).join('\n');
+
+  // battery picker (hero): one radio per option; site.js updates the readout
+  const picker = hasPrice ? `
+        <fieldset class="pm-picker" data-battery-picker data-model="${esc(m.name)}">
+          <legend>Choose your battery</legend>
+          <div class="pm-picker__grid">
+${BATTERY.map((b, i) => `            <label class="pm-opt"><input type="radio" name="battery" value="${i}" data-price="${inr(m.prices[i])}" data-range="${b.range.replace('/charge', '')}" data-label="${b.volt} ${b.chem.toLowerCase()}"${i === current ? ' checked' : ''}><span><b>${b.volt}</b><small>${b.chem} · ${b.range.replace('/charge', '')}</small></span></label>`).join('\n')}
+          </div>
+        </fieldset>
+        <div class="pm-readout" aria-live="polite">
+          <div><span>Price</span><strong data-picker-price>${inr(low)}</strong></div>
+          <div><span>Range per charge</span><em data-picker-range>${BATTERY[lowI].range.replace('/charge', '')}</em></div>
+          <p class="pm-readout__note">With <span data-picker-label>${BATTERY[lowI].volt} ${BATTERY[lowI].chem.toLowerCase()}</span> battery. Your dealer confirms the final on-road price.</p>
+        </div>` : `
+        <div class="pm-readout">
+          <div><span>Price</span><strong>On request</strong></div>
+          <p class="pm-readout__note">Ask SIROS on WhatsApp for the current price and battery options.</p>
+        </div>`;
+
+  const facts = [
+    hasPrice ? ['Up to 120 km', 'Range per charge, by battery'] : ['150 kg', 'Rated payload'],
+    ['3 years', 'Warranty on lithium packs'],
+    ['3–4 hrs', 'Lithium charging time'],
+    [`${m.tyre} in`, 'Tyre size'],
+  ];
+
+  const ICONS = {
+    'LED display': '<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 20h8M7 11h3m3 0h4"/>',
+    'Anti-theft alarm': '<path d="M12 3l7 3v5c0 4.4-3 8-7 9.5C8 19 5 15.4 5 11V6l7-3z"/><path d="M12 9v4m0 3v.01"/>',
+    'Reverse mode': '<path d="M9 7L5 11l4 4"/><path d="M5 11h9a5 5 0 0 1 0 10h-2"/>',
+    'USB charging': '<path d="M12 3v14m0 0l-3-3m3 3l3-3M7 21h10"/><path d="M9 7l3-3 3 3"/>',
+    'Front disc brake': '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/><path d="M12 4v2m0 12v2M4 12h2m12 0h2"/>',
+    'LED headlamp with DRL': '<path d="M10 6a6 6 0 0 0 0 12h1V6h-1z"/><path d="M15 8h5M15 12h6M15 16h5"/>',
+    'Telescopic suspension': '<path d="M9 3v6m6-6v6M7 9h10v3H7zM10 12v9m4-9v9"/>',
+  };
+  const icon = (f) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[f] || '<circle cx="12" cy="12" r="8"/>'}</svg>`;
 
   let colours = '';
   if (m.colours) {
     const cRel = `assets/lineup/${m.colours.image}.webp`;
     const [cw, ch] = webpSize(asset(cRel));
-    const names = m.colours.names.length ? `\n      <div class="p-colours__names">${m.colours.names.map((c) => `<span class="features-chip">${esc(c)}</span>`).join('')}</div>` : '';
+    const names = m.colours.names.length ? `\n      <div class="pm-colours__names">${m.colours.names.map((c) => `<span class="features-chip">${esc(c)}</span>`).join('')}</div>` : '';
     const alt = m.colours.names.length ? `${fullName} in ${m.colours.names.join(', ')}` : `${fullName} colour options`;
     colours = `
-    <section class="p-section p-colours" aria-labelledby="coloursTitle">
-      <p class="eyebrow">Available colours</p>
-      <h2 class="sc-display" id="coloursTitle">${esc(fullName)} colours</h2>${names}
-      <img src="/assets/lineup/${m.colours.image}-800.webp" srcset="/assets/lineup/${m.colours.image}-800.webp 800w, /${cRel} ${cw}w" sizes="(max-width: 900px) 92vw, 72rem" alt="${esc(alt)}" width="${cw}" height="${ch}" loading="lazy" decoding="async">
-    </section>`;
+  <section class="pm-section pm-colours" aria-labelledby="coloursTitle">
+    <p class="eyebrow">Available colours</p>
+    <h2 class="pm-h2" id="coloursTitle">${esc(fullName)} colours</h2>${names}
+    <img src="/assets/lineup/${m.colours.image}-800.webp" srcset="/assets/lineup/${m.colours.image}-800.webp 800w, /${cRel} ${cw}w" sizes="(max-width: 900px) 92vw, 72rem" alt="${esc(alt)}" width="${cw}" height="${ch}" loading="lazy" decoding="async">
+  </section>`;
   }
 
   const answers = [];
   if (hasPrice) {
     answers.push([`How much does the ${fullName} cost?`,
-      `From ${inr(low)} with a ${BATTERY[lowI].volt} ${BATTERY[lowI].chem.toLowerCase()} battery (${BATTERY[lowI].range}) up to ${inr(high)} with a ${BATTERY[highI].volt} ${BATTERY[highI].chem.toLowerCase()} battery. The table above lists every option. Your dealer confirms the final on-road price.`]);
+      `From ${inr(low)} with a ${BATTERY[lowI].volt} ${BATTERY[lowI].chem.toLowerCase()} battery (${BATTERY[lowI].range}) up to ${inr(high)} with a ${BATTERY[highI].volt} ${BATTERY[highI].chem.toLowerCase()} battery. The price list above shows every option. Your dealer confirms the final on-road price.`]);
     answers.push([`How far does the ${fullName} go on one charge?`,
-      `Between 50 and 120 km per charge depending on the battery: 50 km with 48V 32AH lead-acid, up to 120 km with 72V 45AH lead-acid, and 80 or 110 km with the lithium options. Actual range varies with load and riding conditions.`]);
+      'Between 50 and 120 km per charge depending on the battery: 50 km with 48V 32AH lead-acid, up to 120 km with 72V 45AH lead-acid, and 80 or 110 km with the lithium options. Actual range varies with load and riding conditions.']);
   } else {
     answers.push([`How much does the ${fullName} cost?`,
       `The ${m.name} is priced on request. <a href="${enquireWa}" ${EXT}>Ask SIROS on WhatsApp</a> for the current price and battery options.`]);
@@ -188,6 +225,7 @@ function page(m) {
   answers.push(['Can I buy it on EMI?', 'Yes. Finance is available through SIROS finance partners; <a href="/#emi">see the EMI reference plans</a>. The final plan depends on your eligibility.']);
 
   const others = MODELS.filter((o) => o.slug !== m.slug);
+  const variantSlug = m.variantOf ? MODELS.find((o) => o.name === m.variantOf)?.slug : null;
 
   return `<!doctype html>
 <html lang="en">
@@ -219,77 +257,92 @@ function page(m) {
 <link rel="stylesheet" href="/scrollcraft.css">
 <link rel="stylesheet" href="/site.css">
 </head>
-<body>
+<body class="is-model-page">
 <!-- Generated by tools/build-model-pages.mjs from products-data.js. Edit the data, then re-run the script; don't edit this file by hand. -->
 ${nav()}
 
 <main id="main" tabindex="-1">
-  <nav class="p-crumbs" aria-label="Breadcrumb">
-    <ol>
-      <li><a href="/">Home</a></li>
-      <li><a href="/models.html">All models</a></li>
-      <li aria-current="page">${esc(fullName)}</li>
-    </ol>
-  </nav>
-
-  <section class="p-hero">
-    <figure class="p-hero__media${m.cutout ? ' p-hero__media--cutout' : ''}">
-      <img src="/${photoRel}" alt="${esc(fullName)} ${esc(tagLower)}" width="${pw}" height="${ph}" fetchpriority="high">
-    </figure>
-    <div class="p-hero__body">
-      <p class="eyebrow">${esc(m.tag)}</p>
-      <h1 class="sc-display">${esc(fullName)}</h1>
-      <p class="lede">${esc(m.blurb)}</p>${m.variantOf ? `\n      <p class="p-variant-note">Shares its body with the <a href="${modelUrl(MODELS.find((o) => o.name === m.variantOf)?.slug || '')}">${esc(m.variantOf)}</a></p>` : ''}
-      <div class="p-price">${hasPrice
-        ? `<span>Starting at</span><strong>${inr(low)}</strong><small>with ${BATTERY[lowI].volt} ${BATTERY[lowI].chem.toLowerCase()} battery · ${BATTERY[lowI].range}</small>`
-        : '<span>Price</span><strong>On request</strong>'}</div>
-      <div class="p-cta-row">
-        <a class="btn btn--accent btn--wa" href="${enquireWa}" ${EXT}>${WA_ICON}Enquire on WhatsApp</a>
-        <a class="btn" href="#testride" id="qaTestRide">Book a test ride</a>
-        <a class="btn btn--brochure" href="/assets/brochure/SIROS-catalog.pdf" download="SIROS-Vehicle-Catalog.pdf">${DL_ICON}Brochure</a>
+  <section class="pm-hero">
+    <div class="pm-hero__inner">
+      <nav class="pm-crumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/models.html">All models</a></li>
+          <li aria-current="page">${esc(fullName)}</li>
+        </ol>
+      </nav>
+      <div class="pm-hero__grid">
+        <figure class="pm-photo${m.cutout ? ' pm-photo--cutout' : ''}">
+          <img src="/${photoRel}" alt="${esc(fullName)} ${esc(tagLower)}" width="${pw}" height="${ph}" fetchpriority="high">
+        </figure>
+        <div class="pm-info">
+          <p class="pm-tag">${esc(m.tag)}</p>
+          <h1 class="pm-title"><span>SIROS</span> ${esc(m.name)}</h1>
+          <p class="pm-lede">${esc(m.blurb)}</p>${variantSlug ? `
+          <p class="pm-variant">Shares its body with the <a href="${modelUrl(variantSlug)}">SIROS ${esc(m.variantOf)}</a>.</p>` : ''}${picker}
+          <div class="pm-actions">
+            <a class="btn btn--accent btn--wa" href="${enquireWa}" ${EXT} data-picker-enquire>${WA_ICON}Enquire on WhatsApp</a>
+            <a class="btn" href="#testride" id="qaTestRide">Book a test ride</a>
+            <a class="btn btn--brochure" href="/assets/brochure/SIROS-catalog.pdf" download="SIROS-Vehicle-Catalog.pdf">${DL_ICON}Brochure</a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <div class="p-wrap">
-    <dl class="p-specs">
-      <div><dt>Tyre size</dt><dd>${esc(m.tyre)} in</dd></div>
-      <div><dt>Dimensions</dt><dd>${esc(m.dim)}</dd></div>
-      <div><dt>Wheelbase</dt><dd>${esc(m.wheelbase)}</dd></div>
-      <div><dt>Seat length</dt><dd>${esc(m.seat)}</dd></div>
-    </dl>
+  <div class="pm-facts">
+    <ul>
+${facts.map(([v, l]) => `      <li><strong>${esc(v)}</strong><span>${esc(l)}</span></li>`).join('\n')}
+    </ul>
   </div>
 
-  <section class="p-section p-two-col">
+  <section class="pm-section pm-two" style="padding-top:0">
     <div>
-      <p class="eyebrow">Price by battery</p>
-      <h2 class="sc-display">${esc(m.name)} price list</h2>
-      <table class="band-table">
+      <p class="eyebrow">Specifications</p>
+      <h2 class="pm-h2">${esc(m.name)} specs</h2>
+      <dl class="pm-specs">
+        <div><dt>Tyre size</dt><dd>${esc(m.tyre)} inch</dd></div>
+        <div><dt>Dimensions (L × W × H)</dt><dd>${esc(m.dim)}</dd></div>
+        <div><dt>Wheelbase</dt><dd>${esc(m.wheelbase)}</dd></div>
+        <div><dt>Seat length</dt><dd>${esc(m.seat)}</dd></div>
+        <div><dt>Payload</dt><dd>150 kg</dd></div>
+        <div><dt>Charging time</dt><dd>3–4 hrs lithium · 7–8 hrs lead-acid</dd></div>
+      </dl>
+    </div>
+    <div>
+      <p class="eyebrow">Standard on every SIROS</p>
+      <h2 class="pm-h2">What comes with it</h2>
+      <ul class="pm-features">
+${FEATURES.map((f) => `        <li>${icon(f)}${esc(f)}</li>`).join('\n')}
+      </ul>
+    </div>
+  </section>
+
+  <section class="pm-section" aria-labelledby="priceTitle">
+    <p class="eyebrow">Price list</p>
+    <h2 class="pm-h2" id="priceTitle">${esc(fullName)} price for every battery</h2>
+    <div class="pm-table-wrap">
+      <table class="pm-table">
         <caption class="visually-hidden">${esc(fullName)} price for each battery option</caption>
         <thead><tr><th scope="col">Battery</th><th scope="col">Type</th><th scope="col">Range</th><th scope="col">Price</th></tr></thead>
         <tbody>
 ${rows}
         </tbody>
       </table>
-      <p class="p-note">Prices as per the SIROS rate list; your dealer confirms the final on-road price. Range per charge as stated by SIROS and varies with load and riding conditions. Payload 150 kg.</p>
     </div>
-    <div>
-      <p class="eyebrow">Standard, on every model</p>
-      <h2 class="sc-display">What comes with it</h2>
-      <div class="features-strip" style="margin-top:1.2rem">${FEATURES.map((f) => `<span class="features-chip">${esc(f)}</span>`).join('')}</div>
-    </div>
+    <p class="pm-note">Prices as per the SIROS rate list; your dealer confirms the final on-road price. Range per charge as stated by SIROS and varies with load and riding conditions.</p>
   </section>
 ${colours}
-  <section class="p-section" aria-labelledby="answersTitle">
+  <section class="pm-section" aria-labelledby="answersTitle">
     <p class="eyebrow">Quick answers</p>
-    <h2 class="sc-display" id="answersTitle">${esc(fullName)}: questions buyers ask</h2>
-    <div class="p-answers">
+    <h2 class="pm-h2" id="answersTitle">${esc(fullName)}: questions buyers ask</h2>
+    <div class="pm-answers">
 ${answers.map(([q, a]) => `      <div><h3>${esc(q)}</h3><p>${a}</p></div>`).join('\n')}
     </div>
   </section>
 
-  <section class="p-section" data-rail aria-labelledby="moreTitle" style="padding-left:0;padding-right:0">
-    <div class="rail-head" style="padding-inline:var(--sc-gutter)">
+  <section class="pm-more" data-rail aria-labelledby="moreTitle">
+    <div class="rail-head">
       <div class="rail-head__copy">
         <p class="eyebrow">Compare</p>
         <h2 class="section-heading" id="moreTitle">More SIROS models</h2>
@@ -308,9 +361,9 @@ ${answers.map(([q, a]) => `      <div><h3>${esc(q)}</h3><p>${a}</p></div>`).join
     <div class="rail-progress" aria-hidden="true"><span></span></div>
   </section>
 
-  <section class="p-closing">
-    <p>Ready to ride the ${esc(fullName)}?</p>
-    <div class="p-cta-row">
+  <section class="pm-close">
+    <h2>Ready to ride the ${esc(fullName)}?</h2>
+    <div class="pm-actions">
       <a class="btn btn--accent btn--wa" href="${enquireWa}" ${EXT}>${WA_ICON}Chat on WhatsApp</a>
       <a class="btn" href="/dealers.html">Find a dealer</a>
     </div>

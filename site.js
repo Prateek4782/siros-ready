@@ -237,6 +237,32 @@ function sirosFocusTrap(container) {
   }
 })();
 
+/* -------------------------------------------------------- battery picker -- */
+/* Model pages: picking a battery updates the price, range, the highlighted
+   price-list row and the WhatsApp enquiry. The page already shows the
+   cheapest option without JavaScript. */
+(function batteryPicker() {
+  const picker = document.querySelector('[data-battery-picker]');
+  if (!picker) return;
+  const model = picker.dataset.model;
+  const price = document.querySelector('[data-picker-price]');
+  const range = document.querySelector('[data-picker-range]');
+  const label = document.querySelector('[data-picker-label]');
+  const enquire = document.querySelector('[data-picker-enquire]');
+  const rows = document.querySelectorAll('.pm-table tr[data-row]');
+  function update() {
+    const input = picker.querySelector('input:checked');
+    if (!input) return;
+    price.textContent = input.dataset.price;
+    range.textContent = input.dataset.range;
+    label.textContent = input.dataset.label;
+    rows.forEach((r) => r.classList.toggle('is-current', r.dataset.row === input.value));
+    if (enquire) enquire.href = sirosWhatsApp(`Hi SIROS, I'm interested in the ${model} with the ${input.dataset.label} battery (${input.dataset.price}). Please share the details.`);
+  }
+  picker.addEventListener('change', update);
+  update();
+})();
+
 /* ----------------------------------------------------------------- rails -- */
 /* Sideways shelves: native scroll + snap does the real work (touch swipe and
    trackpads just work). This layer adds arrow buttons, mouse drag with
@@ -753,7 +779,10 @@ function sirosDoneMessage(title, line, url) {
   function detachScrollTrigger() { window.removeEventListener('scroll', onScroll); }
   // The automatic pop stays capped at once per tab; the floating button
   // above is the permanent, uncapped way in, so it attaches regardless.
-  if (!alreadyShown) window.addEventListener('scroll', onScroll, { passive: true });
+  // Model pages already carry their own "Book a test ride" button next to the
+  // price, so the automatic pop-up would only interrupt someone comparing.
+  const autoAllowed = !document.body.classList.contains('is-model-page');
+  if (!alreadyShown && autoAllowed) window.addEventListener('scroll', onScroll, { passive: true });
 })();
 
 /* -------------------------------------------------------------- dealer application -- */
