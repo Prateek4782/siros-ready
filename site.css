@@ -572,16 +572,24 @@ em, i.brandmark-italic { font-style: italic; }
    behind the fixed nav bar, with the rest of the stage a flat block of
    blank forest green underneath. */
 .close-stage { background: var(--forest); color: var(--cream); display: flex; align-items: center; justify-content: center; }
-.close-inner { text-align: center; max-width: 40rem; margin-inline: auto; padding-inline: var(--sc-gutter); }
+.close-inner { text-align: center; max-width: 48rem; margin-inline: auto; padding-inline: var(--sc-gutter); }
 .close-inner h2 { font-size: clamp(2.4rem, 5vw, 4.2rem); color: var(--cream); }
 .close-inner .btn--accent { margin-top: var(--sc-6); font-size: var(--sc-t-base); padding: 1rem 1.8rem; }
 .close-inner .partner-strip { justify-content: center; gap: clamp(0.6rem, 1.6vw, 0.9rem); margin-top: clamp(2.4rem, 5vw, 3.2rem); }
+/* Partner logos in full colour on equal white tiles, each logo fitted
+   inside so a very wide mark (Ampure) doesn't outweigh the others. */
 .close-inner .partner-strip img {
-  height: clamp(1.7rem, 3.2vw, 2rem); padding: 0.5rem 0.85rem;
-  background: color-mix(in oklab, var(--cream) 94%, transparent);
-  border-radius: var(--sc-r-md); filter: none; opacity: 0.92;
+  box-sizing: border-box; height: 3rem; width: 8.75rem; padding: 0.55rem 0.8rem;
+  object-fit: contain; background: #fff; border-radius: var(--sc-r-md);
+  filter: none; opacity: 1; box-shadow: 0 6px 18px -8px rgba(0,0,0,.5);
 }
-.close-inner .partner-strip img:hover { opacity: 1; }
+.partner-strip__label { margin: clamp(2.4rem, 5vw, 3.2rem) 0 0.8rem; font-size: var(--sc-t-xs); font-weight: 700; letter-spacing: var(--sc-track-wide); text-transform: uppercase; color: color-mix(in oklab, var(--cream) 60%, transparent); }
+.close-inner .partner-strip__label + .partner-strip { margin-top: 0; }
+@media (min-width: 761px) {
+  .close-inner .partner-strip { flex-wrap: nowrap; }
+  .close-inner .partner-strip img { width: auto; flex: 1 1 0; min-width: 0; max-width: 8.75rem; }
+}
+@media (max-width: 560px) { .close-inner .partner-strip img { width: 7.5rem; height: 2.6rem; } }
 /* -------------------------------------------------------------- footer -- */
 /* A fixed token, not --sc-canvas: that one is rewritten globally by each
    act's data-sc-drift as the reader scrolls, and the footer comes after the
